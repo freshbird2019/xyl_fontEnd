@@ -72,7 +72,7 @@
               this.showTishi = true
               setCookie('username',this.username,1000*60)
               setTimeout(function(){
-                this.$router.push('/home')
+                this.$router.push('/adm/a-classpage')
               }.bind(this),1000)
             }
           })

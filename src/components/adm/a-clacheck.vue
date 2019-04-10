@@ -20,12 +20,12 @@
     </el-row>
 
     <!-- 已审核班级成员 -->
-    <el-table :data="FactoryOrderInfo" border>
-      <el-table-column prop="number" label="学号" align="center"></el-table-column>
-      <el-table-column prop="orderId" label="班级" align="center"></el-table-column>
-      <el-table-column prop="number" label="姓名" align="center"></el-table-column>
-      <el-table-column prop="orderSource" label="性别" align="center"></el-table-column>
-      <el-table-column prop="orderSource" label="联系方式" align="center"></el-table-column>
+    <el-table :data="xyInfo" border>
+      <el-table-column prop="xid" label="学号" align="center"></el-table-column>
+      <el-table-column prop="clazzByClassid.cid" label="班级" align="center"></el-table-column>
+      <el-table-column prop="name" label="姓名" align="center"></el-table-column>
+      <el-table-column prop="sex" label="性别" align="center"></el-table-column>
+      <el-table-column prop="phone" label="联系方式" align="center"></el-table-column>
       <el-table-column label="操作" width="220" align="center">
         <template slot-scope="scope">
           <el-button
@@ -46,20 +46,17 @@
       :close-on-press-escape="false"
     >
       <el-form id="#update" :model="update" ref="update" label-width="100px">
-        <el-form-item label="学号" prop="orderId">
-          <el-input v-model="update.orderId"></el-input>
+        <el-form-item label="学号" prop="xid">
+          <el-input v-model="update.xid"></el-input>
         </el-form-item>
-        <el-form-item label="班级" prop="orderSource">
-          <el-input v-model="update.orderSource"></el-input>
-        </el-form-item>
-        <el-form-item label="班级" prop="totalPrice">
-          <el-input v-model="update.totalPrice"></el-input>
-        </el-form-item>
-        <el-form-item label="姓名" prop="totalPrice">
-          <el-input v-model="update.remark"></el-input>
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="update.name"></el-input>
         </el-form-item>
         <el-form-item label="性别" prop="totalPrice">
-          <el-input v-model="update.remark"></el-input>
+          <el-input v-model="update.sex"></el-input>
+        </el-form-item>
+        <el-form-item label="联系方式" prop="phone">
+          <el-input v-model="update.phone"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -78,10 +75,10 @@
     methods: {
       setCurrent(currentOrder) {
         console.log(currentOrder);
-        this.update.orderId = currentOrder.orderId;
-        this.update.orderSource = currentOrder.orderSource;
-        this.update.totalPrice = currentOrder.totalPrice;
-        this.update.remark = currentOrder.remark;
+        this.update.xid = currentOrder.xid;
+        this.update.name = currentOrder.name;
+        this.update.sex = currentOrder.sex;
+        this.update.phone = currentOrder.phone;
         this.dialogUpdateVisible = true;
         console.log(this.dialogUpdateVisible);
       },
@@ -101,11 +98,11 @@
         ).then(() => {
           console.log("确认踢出该同学");
           // 向请求服务端删除
-          let orderId = currentOrder.orderId;
+          let orderId = currentOrder.xid;
           console.log(orderId);
-          this.$ajax.get('http://localhost:8080/order/deleteOne/'+orderId,).then(response=> {
+          this.$ajax.get('http://localhost:8088/xyl/deleteClaMember?xid='+orderId+"&name="+currentOrder.name,).then(response=> {
             console.log(response);
-            if(response.data=="success"){
+            if(response.data){
               this.open1();
             }
           }).catch(function (error){
@@ -139,14 +136,15 @@
     },
     mounted(){
       // 加载数据
+      // 获取班级id
+      let cid = this.$route.query.cid;
       console.log("loading data.")
-      this.$ajax({
-        method:'get',
-        url:'http://localhost:8080/order/findAll',
-      }).then(response=>{
+
+      this.$ajax.get('http://localhost:8088/xyl/displayMember?id='+cid).then(response=> {
         console.log(response.data);
         for(let i= 0; i<response.data.length;i++) {
-          this.FactoryOrderInfo.push(response.data[i]);
+          if(response.data[i].state==1)
+            this.xyInfo.push(response.data[i]);
         }
       });
     },
@@ -155,18 +153,22 @@
         dialogCreateVisible: false,
         dialogUpdateVisible: false,
         create: {
-          orderId: "",
-          orderSource: "",
-          totalPrice: "",
-          remark: ""
+          xid: "",
+          name: "",
+          sex: "",
+          phone: "",
+          mail: "",
+          clazz: []
         },
         update: {
-          orderId: "",
-          orderSource: "",
-          totalPrice: "",
-          remark: ""
+          xid: "",
+          name: "",
+          sex: "",
+          phone: "",
+          mail: "",
+          clazz: []
         },
-        FactoryOrderInfo: [],
+        xyInfo: [],
       };
     }
   };
