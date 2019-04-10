@@ -88,7 +88,7 @@
           let data = {'username':this.username,'password':this.password};
           let info = "id="+this.username+"&pw="+this.password;
           /*接口请求*/
-          this.$ajax.post('http://localhost:8088/xyl/checkLogin?'+info).then((res)=>{
+          this.$http.post('http://localhost:8088/xyl/checkLogin?'+info).then((res)=>{
             console.log(res)
             /*接口的传值是(false,该用户不存在),(false,密码错误)，同时还会检测管理员账号的值*/
             if(! res.data){

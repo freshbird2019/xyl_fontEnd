@@ -95,7 +95,8 @@
     methods: {
       moment:moment,
       ToComment(){
-        let data = {'lyxyname':this.lyxyname,'info':this.textarea}
+        var comment=encodeURI(this.textarea)
+        let data = {'lyxyname':this.lyxyname,'info':comment}
         console.log(data);
         this.$http.post('http://127.0.0.1:8088/xyl/addLy.do',data
         ).then(response => {
@@ -118,7 +119,7 @@
       console.log("loading data.")
       this.$ajax({
         method:'get',
-        url:'http://localhost:8088/xyl/ggetAllLy',
+        url:'http://127.0.0.1:8088/xyl/xyGetAllLy',
       }).then(response=>{
         console.log(response.data);
         for(let i= 0; i<response.data.length;i++) {

@@ -28,7 +28,7 @@
               <el-row>
                 <el-col :span="5">
                   <el-form-item label="序号：">
-                    <span>{{ props.row.id }}</span>
+                    <span>{{ props.row.lid }}</span>
                   </el-form-item>
                 </el-col>
                 <el-col :span="7">
@@ -38,12 +38,12 @@
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="时间：">
-                    <span>{{ props.row.time }}</span>
+                    <span>{{ props.row.lydate}}</span>
                   </el-form-item>
                 </el-col>
                 <el-col>
                   <el-form-item label="内容：">
-                    <span>{{ props.row.content }}</span>
+                    <span>{{ props.row.info }}</span>
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -54,7 +54,7 @@
           label="操作"
           prop="state" width="100px">
           <template slot-scope="scope">
-            <el-button type="info"  size="small" icon="el-icon-check" @click="setCurrent(scope.row)"style="background:#C19892;border:none">通过</el-button>
+            <el-button type="info"  size="small" icon="el-icon-check" @click="passLy(scope.row)"style="background:#C19892;border:none">通过</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -76,17 +76,43 @@
         this.dialogUpdateVisible = true;
         console.log(this.dialogUpdateVisible);
       },
+      passLy(currentLy){
+        console.log("通过留言");
+        this.$confirm(
+          "确定通过留言 " + currentLy.lid ,
+          "?提示",
+          {
+            type: "warning"
+          }
+        ).then(() => {
+          console.log("确认留言");
+          // 向请求服务端删除
+          let lid =currentLy.lid;
+          console.log(lid);
+          this.$ajax.get('http://127.0.0.1:8088/xyl/passLy.do?lid='+lid).then(response => {
+            console.log(response);
+            if (response.data == true) {
+              this.reload();
+            }
+          }).catch(function (error) {
+            console.log("pass failed！")
+          });
+        })
+          .catch(() => {
+            this.$message.info("已取消操作!");
+          });
+      }
     },
     mounted(){
       // 加载数据
       console.log("loading data.")
       this.$ajax({
         method:'get',
-        url:'http://localhost:8080/order/findAll',
+        url:'http://localhost:8088/xyl/glyGetAllLy',
       }).then(response=>{
         console.log(response.data);
         for(let i= 0; i<response.data.length;i++) {
-          this.FactoryOrderInfo.push(response.data[i]);
+          this.tableData.push(response.data[i]);
         }
       });
     },
@@ -99,25 +125,29 @@
           remark: ""
         },
         tableData: [{
-          id: '1',
+          lid: '1',
           name: '李泽言',
-          time:'2019.03.02 19:12:58',
-          content:'不能回头，就走的更远吧。'
+          lydate:'2019.03.02 19:12:58',
+          state:'已审核',
+          info:'不能回头，就走的更远吧。'
         }, {
-          id: '2',
+          lid: '2',
           name: '白起',
-          time:'2019.03.02 19:12:58',
-          content:'只要你在风里，我就感知得到。'
+          lydate:'2019.03.02 19:12:58',
+          state:'已审核',
+          info:'只要你在风里，我就感知得到。'
         }, {
-          id: '3',
+          lid: '3',
           name: '周棋洛',
-          time:'2019.03.02 19:12:58',
-          content:'千万人的喜欢，不及你一个人的重要。'
+          lydate:'2019.03.02 19:12:58',
+          state:'已审核',
+          info:'千万人的喜欢，不及你一个人的重要。'
         }, {
-          id: '4',
+          lid: '4',
           name: '许墨',
-          time:'2019.03.02 19:12:58',
-          content:'我贪得无厌想要你的全部。'
+          lydate:'2019.03.02 19:12:58',
+          state:'已审核',
+          info:'我贪得无厌想要你的全部。'
         }],
         textarea: ''
 
