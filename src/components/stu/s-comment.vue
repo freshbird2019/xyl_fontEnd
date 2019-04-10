@@ -28,7 +28,7 @@
             <el-row>
               <el-col :span="5">
             <el-form-item label="序号：">
-              <span>{{ props.row.id }}</span>
+              <span>{{ props.row.lid }}</span>
             </el-form-item>
               </el-col>
               <el-col :span="7">
@@ -38,12 +38,12 @@
               </el-col>
               <el-col :span="12">
             <el-form-item label="时间：">
-              <span>{{ props.row.time }}</span>
+              <span>{{ moment(props.row.lydate).format('YYYY-MM-DD HH:mm:ss')}}</span>
             </el-form-item>
               </el-col>
               <el-col>
             <el-form-item label="内容：">
-              <span>{{ props.row.content }}</span>
+              <span>{{ props.row.info }}</span>
             </el-form-item>
               </el-col>
               </el-row>
@@ -81,41 +81,54 @@
     rows="6">
   </el-input>
     <el-col :span="1"  style="margin-left:93%;margin-top:3%;">
-      <el-button type="info"  style="background:#C19892;border:none">发表</el-button>
+      <el-button type="info" @click="ToComment" style="background:#C19892;border:none">发表</el-button>
     </el-col>
   </div>
 </template>
 
 <script>
+  import moment from 'moment'
+  import {setCookie,getCookie} from '../../assets/js/cookie.js'
   export default {
     name: "s-comment",
     inject:['reload'],
     methods: {
-      setCurrent(currentOrder) {
-        console.log(currentOrder);
-        this.update.orderId = currentOrder.orderId;
-        this.update.orderSource = currentOrder.orderSource;
-        this.update.totalPrice = currentOrder.totalPrice;
-        this.update.remark = currentOrder.remark;
-        this.dialogUpdateVisible = true;
-        console.log(this.dialogUpdateVisible);
+      moment:moment,
+      ToComment(){
+        let data = {'lyxyname':this.lyxyname,'info':this.textarea}
+        console.log(data);
+        this.$http.post('http://127.0.0.1:8088/xyl/addLy.do',data
+        ).then(response => {
+          console.log(response);
+          this.open1();
+        }).catch(function (error) {
+          console.log("save failed！")
+        });
       },
+      open1(){
+        this.$message({
+          message:'留言成功，等待审核',
+          type:'success'
+        });
+        this.reload();
+      }
     },
     mounted(){
       // 加载数据
       console.log("loading data.")
       this.$ajax({
         method:'get',
-        url:'http://localhost:8080/order/findAll',
+        url:'http://localhost:8088/xyl/ggetAllLy',
       }).then(response=>{
         console.log(response.data);
         for(let i= 0; i<response.data.length;i++) {
-          this.FactoryOrderInfo.push(response.data[i]);
+          this.tableData.push(response.data[i]);
         }
       });
     },
     data() {
       return {
+        lyxyname:getCookie("xyusername"),
         update: {
           orderId: "",
           orderSource: "",
@@ -123,35 +136,35 @@
           remark: ""
         },
         tableData: [{
-          id: '1',
+          lid: '1',
           name: '李泽言',
-          time:'2019.03.02 19:12:58',
+          lydate:'2019.03.02 19:12:58',
           state:'已审核',
-          content:'不能回头，就走的更远吧。'
+          info:'不能回头，就走的更远吧。'
         }, {
-          id: '2',
+          lid: '2',
           name: '白起',
-          time:'2019.03.02 19:12:58',
+          lydate:'2019.03.02 19:12:58',
           state:'已审核',
-          content:'只要你在风里，我就感知得到。'
+          info:'只要你在风里，我就感知得到。'
         }, {
-          id: '3',
+          lid: '3',
           name: '周棋洛',
-          time:'2019.03.02 19:12:58',
+          lydate:'2019.03.02 19:12:58',
           state:'已审核',
-          content:'千万人的喜欢，不及你一个人的重要。'
+          info:'千万人的喜欢，不及你一个人的重要。'
         }, {
-          id: '4',
+          lid: '4',
           name: '许墨',
-          time:'2019.03.02 19:12:58',
+          lydate:'2019.03.02 19:12:58',
           state:'已审核',
-          content:'我贪得无厌想要你的全部。'
+          info:'我贪得无厌想要你的全部。'
         }],
           textarea: ''
 
       }
     }
-  };
+  }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

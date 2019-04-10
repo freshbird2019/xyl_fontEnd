@@ -46,7 +46,7 @@
             'phone':this.xyphone, 'mail':this.xyemail,'address':this.xyaddress}
           this.$ajax({
             method:'post',
-            url:'http://127.0.0.1:8080/ThirdDemo/rregister.do',
+            url:'http://127.0.0.1:8088/xyl/register.do',
             data:{
               "name": this.newUsername,
               "pw":this.newPassword,
@@ -65,7 +65,7 @@
               this.newPassword = ''
               /*注册成功之后再跳回登录页*/
               setTimeout(function () {
-                this.$router.push('/login/log')
+                this.$router.push('/')
               }.bind(this), 1000)
             }
           })
