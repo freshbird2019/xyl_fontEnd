@@ -15,7 +15,7 @@
           <p v-show="showTishi">{{tishi}}</p>
           <input type="text" placeholder="请输入用户名" v-model="username">
           <input type="password" placeholder="请输入密码" v-model="password">
-          <el-button type="info" @click="login"style="background:#D79B7C;border:none">登 录</el-button>
+          <el-button type="info" @click="loginGly"style="background:#D79B7C;border:none">登 录</el-button>
           <router-link to="/stu/s-welcome">
             <el-button type="info" style="background:#D79B7C;border:none">测 试</el-button>
           </router-link>
@@ -26,7 +26,7 @@
           <p v-show="showTishi">{{tishi}}</p>
           <input type="text" placeholder="请输入用户名" v-model="username">
           <input type="password" placeholder="请输入密码" v-model="password">
-          <el-button type="info" @click="login"style="background:#D79B7C;border:none">登 录</el-button>
+          <el-button type="info" @click="loginXy"style="background:#D79B7C;border:none">登 录</el-button>
           <el-button type="info" @click="ToRegister"style="background:#D79B7C;border:none">注 册</el-button>
           <router-link to="/adm/a-welcome">
           <el-button type="info" style="background:#D79B7C;border:none">测 试</el-button>
@@ -49,24 +49,24 @@
       }
     },
     methods:{
-      login(){
+
+      loginXy() { // 校友登陆
+
+      },
+
+      loginGly(){ //管理员登陆
         if(this.username == "" || this.password == ""){
           alert("请输入用户名或密码")
         }else{
-          let data = {'username':this.username,'password':this.password}
+          let data = {'username':this.username,'password':this.password};
+          let info = "id="+this.username+"&pw="+this.password;
           /*接口请求*/
-          this.$http.post('http://localhost/vueapi/index.php/Home/user/login',data).then((res)=>{
+          this.$ajax.post('http://localhost:8088/xyl/checkLogin?'+info).then((res)=>{
             console.log(res)
-            /*接口的传值是(-1,该用户不存在),(0,密码错误)，同时还会检测管理员账号的值*/
-            if(res.data == -1){
-              this.tishi = "该用户不存在"
+            /*接口的传值是(false,该用户不存在),(false,密码错误)，同时还会检测管理员账号的值*/
+            if(! res.data){
+              this.tishi = "用户名或密码错误"
               this.showTishi = true
-            }else if(res.data == 0){
-              this.tishi = "密码输入错误"
-              this.showTishi = true
-            }else if(res.data == 'admin'){
-              /*路由跳转this.$router.push*/
-              this.$router.push('/main')
             }else{
               this.tishi = "登录成功"
               this.showTishi = true
