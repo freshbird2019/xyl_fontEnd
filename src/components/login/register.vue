@@ -1,21 +1,25 @@
 <template>
   <div>
     <div class="pics" height="150px">
-      <el-carousel height="400px":interval="5000" arrow="always">
+      <el-carousel :interval="5000" arrow="always">
         <el-carousel-item v-for="item in 4" :key="item">
           <h3>{{ item }}</h3>
         </el-carousel-item>
       </el-carousel>
     </div>
-    <h2 align="center">在线校友录管理系统</h2>
+    <h3 align="center">注册</h3>
     <div class="b" align="center" >
-      <el-tabs type="border-card" style="width:40%;"stretch="true">
+      <el-tabs type="border-card" style="width:50%;" :stretch="true">
         <el-tab-pane label="校友注册" >
           <div class="login-wrap" v-show="showLogin" >
             <p v-show="showTishi">{{tishi}}</p>
-            <input type="text" placeholder="请输入用户名" v-model="username">
-            <input type="password" placeholder="请输入密码" v-model="password">
-            <el-button type="info" @click="register"style="background:#D79B7C;border:none">注 册</el-button>
+            <input type="text" placeholder="请输入用户名" v-model="newUsername">
+            <input type="password" placeholder="请输入密码" v-model="newPassword">
+            <input type="text" placeholder="请输入性别" v-model="xysex">
+            <input type="text" placeholder="请输入电话" v-model="xyphone">
+            <input type="text" placeholder="请输入邮箱" v-model="xyemail">
+            <input type="text" placeholder="请输入地址" v-model="xyaddress">
+            <button v-on:click="register">注册</button>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -29,28 +33,39 @@
   export default{
     mounted(){
       /*页面挂载获取cookie，如果存在username的cookie，则跳转到主页，不需登录*/
-      if(getCookie('username')){
+      /*if(getCookie('xyusername')){
         this.$router.push('/home')
-      }
+      }*/
     },
     methods:{
-       register() {
+      register() {
         if (this.newUsername == "" || this.newPassword == "") {
           alert("请输入用户名或密码")
         } else {
-          let data = {'username': this.newUsername, 'password': this.newPassword}
-          this.$http.post('http://localhost/vueapi/index.php/Home/user/register', data).then((res) => {
+          let data = {'name': this.newUsername, 'pw': this.newPassword,'sex':this.xysex,
+            'phone':this.xyphone, 'mail':this.xyemail,'address':this.xyaddress}
+          this.$ajax({
+            method:'post',
+            url:'http://127.0.0.1:8080/ThirdDemo/rregister.do',
+            data:{
+              "name": this.newUsername,
+              "pw":this.newPassword,
+              "sex":this.xysex,
+              "phone":this.xyphone,
+              "mail":this.xyemail,
+              "address":this.xyaddress},
+            contentType:"application/json charset=utf-8",
+          }).then((res) => {
             console.log(res)
-            if (res.data == "ok") {
+            if (res.data == true) {
+              console.log(res.data)
               this.tishi = "注册成功"
               this.showTishi = true
-              this.username = ''
-              this.password = ''
+              this.newUsername = ''
+              this.newPassword = ''
               /*注册成功之后再跳回登录页*/
               setTimeout(function () {
-                this.showRegister = false
-                this.showLogin = true
-                this.showTishi = false
+                this.$router.push('/login/log')
               }.bind(this), 1000)
             }
           })
@@ -61,13 +76,17 @@
     data(){
       return{
         showLogin: true,
-        showRegister: false,
+        showRegister: true,
         showTishi: false,
         tishi: '',
-        username: '',
-        password: '',
+        xyusername: '',
+        xypassword: '',
         newUsername: '',
-        newPassword: ''
+        newPassword: '',
+        xysex:'',
+        xyphone:'',
+        xyemail:'',
+        xyaddress:''
       }
     }
   };

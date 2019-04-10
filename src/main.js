@@ -4,7 +4,10 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import axios from 'axios'
+import VueResource from 'vue-resource'
 
+Vue.use(VueResource)
+Vue.http.options.emulateJSON = true
 
 // 引入element-ui样式
 import ElementUI from 'element-ui';

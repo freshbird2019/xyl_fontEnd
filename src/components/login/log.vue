@@ -9,7 +9,7 @@
     </div>
     <h2 align="center" >在线校友录管理系统</h2>
     <div class="b" align="center" >
-    <el-tabs type="border-card" style="width:40%;"stretch="true" >
+    <el-tabs type="border-card" style="width:40%;":stretch="true" >
       <el-tab-pane label="管理员登录"  >
         <div class="login-wrap" v-show="showLogin" >
           <p v-show="showTishi">{{tishi}}</p>
@@ -24,8 +24,8 @@
       <el-tab-pane label="校友登录" >
         <div class="login-wrap" v-show="showLogin" >
           <p v-show="showTishi">{{tishi}}</p>
-          <input type="text" placeholder="请输入用户名" v-model="username">
-          <input type="password" placeholder="请输入密码" v-model="password">
+          <input type="text" placeholder="请输入用户名" v-model="xyusername">
+          <input type="password" placeholder="请输入密码" v-model="xypassword">
           <el-button type="info" @click="loginXy"style="background:#D79B7C;border:none">登 录</el-button>
           <el-button type="info" @click="ToRegister"style="background:#D79B7C;border:none">注 册</el-button>
           <router-link to="/adm/a-welcome">
@@ -44,14 +44,41 @@
   export default{
     mounted(){
       /*页面挂载获取cookie，如果存在username的cookie，则跳转到主页，不需登录*/
-      if(getCookie('username')){
+     /* if(getCookie('username')){
         this.$router.push('/home')
-      }
+      }*/
     },
     methods:{
 
       loginXy() { // 校友登陆
-
+        if(this.xyusername == "" || this.xypassword == ""){
+          alert("请输入用户名或密码")
+        }else{
+          let data = {'name':this.xyusername,'pw':this.xypassword}
+          /*接口请求*/
+          this.$http.post('http://127.0.0.1:8088/xyl/llogin.do',data).then((res)=>{
+            console.log(res)
+            /*接口的传值是(-1,该用户不存在),(0,密码错误)，同时还会检测管理员账号的值*/
+            if(res.data == -1){
+              this.tishi = "该用户不存在"
+              this.showTishi = true
+            }else if(res.data == 0){
+              this.tishi = "密码输入错误"
+              this.showTishi = true
+            }else if(res.data==-2){
+              this.tishi="服务器崩了！！！"
+              this.showTishi=true;
+            }
+            else{
+              this.tishi = "登录成功"
+              this.showTishi = true
+              setCookie('xyusername',this.xyusername,1000*60)
+              setTimeout(function(){
+                this.$router.push('/stu/s-classpage')
+              }.bind(this),1000)
+            }
+          })
+        }
       },
 
       loginGly(){ //管理员登陆
@@ -91,6 +118,8 @@
           tishi: '',
           username: '',
           password: '',
+          xyusername: '',
+          xypassword: '',
           newUsername: '',
           newPassword: ''
         }
