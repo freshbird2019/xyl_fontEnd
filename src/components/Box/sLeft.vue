@@ -1,0 +1,70 @@
+<template>
+  <div class="leftBox">
+    <el-menu
+      default-active="2"
+      class="el-menu-vertical-demo"
+      background-color="#B68C8C"
+      text-color="#fff"
+      active-text-color="#EAC25E"
+    >
+      <el-submenu index="1">
+        <template slot="title">
+          <i class="el-icon-edit"style="color:#ffffff"></i>
+          <span>班级浏览</span>
+        </template>
+        <router-link to="/stu/s-classpage">
+          <el-menu-item index="1-1">查看班级信息</el-menu-item>
+        </router-link>
+        <router-link to="/stu/s-classmate">
+          <el-menu-item index="1-2">查看班级成员</el-menu-item>
+        </router-link>
+      </el-submenu>
+
+
+      <el-submenu index="2">
+        <template slot="title">
+          <i class="el-icon-edit-outline"style="color:#ffffff"></i>
+          <span>活动浏览</span>
+        </template>
+        <router-link to="/stu/s-actpage">
+          <el-menu-item index="2-1">当前活动信息</el-menu-item>
+        </router-link>
+        <router-link to="/stu/s-iact">
+          <el-menu-item index="2-2">已参加的活动</el-menu-item>
+        </router-link>
+      </el-submenu>
+
+
+      <el-submenu index="3">
+        <template slot="title">
+          <i class="el-icon-menu"style="color:#ffffff"></i>
+          <span>留言浏览</span>
+        </template>
+        <router-link to="/stu/s-comment">
+          <el-menu-item index="3-1">查看当前留言</el-menu-item>
+        </router-link>
+        <router-link to="/stu/s-commentcheck">
+          <el-menu-item index="3-2">待审核的留言</el-menu-item>
+        </router-link>
+      </el-submenu>
+
+    </el-menu>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: "LeftBox",
+    data() {
+      return {};
+    },
+    methods: {}
+  };
+</script>
+
+<style lang="" scoped>
+  .el-menu a{
+    text-decoration: none;
+  }
+</style>
+
