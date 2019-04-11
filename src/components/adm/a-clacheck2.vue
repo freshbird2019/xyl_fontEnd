@@ -124,7 +124,7 @@
       console.log("loading data.")
       this.$ajax({
         method:'get',
-        url:'http://localhost:8080/order/findAll',
+        url:'http://localhost:8088/xyl/getAllXy2',
       }).then(response=>{
         console.log(response.data);
         for(let i= 0; i<response.data.length;i++) {
