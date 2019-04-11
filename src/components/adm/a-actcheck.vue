@@ -20,12 +20,12 @@
     </el-row>
 
     <!-- 待审核活动信息汇总 -->
-    <el-table :data="FactoryOrderInfo" border>
-      <el-table-column prop="number" label="活动编号" align="center"></el-table-column>
-      <el-table-column prop="orderId" label="主题" align="center"></el-table-column>
-      <el-table-column prop="orderSource" label="人数" align="center"></el-table-column>
-      <el-table-column prop="orderSource" label="内容" align="center"></el-table-column>
-      <el-table-column prop="orderSource" label="时间" align="center"></el-table-column>
+    <el-table :data="xyInfo" border>
+      <el-table-column prop="xid" label="校友id" align="center"></el-table-column>
+      <el-table-column prop="name" label="姓名" align="center"></el-table-column>
+      <el-table-column prop="sex" label="性别" align="center"></el-table-column>
+      <el-table-column prop="phone" label="电话" align="center"></el-table-column>
+      <el-table-column prop="mail" label="邮箱" align="center"></el-table-column>
       <el-table-column label="操作" width="220" align="center">
         <template slot-scope="scope">
           <el-button
@@ -72,9 +72,9 @@
         ).then(() => {
           console.log("确认拒绝此活动的申请");
           // 向请求服务端删除
-          let orderId = currentOrder.orderId;
+          let orderId = currentOrder.aid;
           console.log(orderId);
-          this.$ajax.get('http://localhost:8080/order/deleteOne/'+orderId,).then(response=> {
+          this.$ajax.get('http://localhost:8088/xyl/'+orderId,).then(response=> {
             console.log(response);
             if(response.data=="success"){
               this.open1();
@@ -110,14 +110,14 @@
     },
     mounted(){
       // 加载数据
+      const routerParams = this.$route.query.aid;
+      let id = routerParams;
+      console.log(routerParams);
       console.log("loading data.")
-      this.$ajax({
-        method:'get',
-        url:'http://localhost:8080/order/findAll',
-      }).then(response=>{
+      this.$ajax.get('http://localhost:8088/xyl/getAcXy?num='+id).then(response=> {
         console.log(response.data);
         for(let i= 0; i<response.data.length;i++) {
-          this.FactoryOrderInfo.push(response.data[i]);
+          this.xyInfo.push(response.data[i]);
         }
       });
     },
@@ -125,19 +125,22 @@
       return {
         dialogCreateVisible: false,
         dialogUpdateVisible: false,
+        aid: 0,
         create: {
-          orderId: "",
-          orderSource: "",
-          totalPrice: "",
-          remark: ""
+          xid: "",
+          name: "",
+          sex: "",
+          phone: "",
+          mail: ""
         },
         update: {
-          orderId: "",
-          orderSource: "",
-          totalPrice: "",
-          remark: ""
+          xid: "",
+          name: "",
+          sex: "",
+          phone: "",
+          mail: ""
         },
-        FactoryOrderInfo: [],
+        xyInfo: [],
       };
     }
   };

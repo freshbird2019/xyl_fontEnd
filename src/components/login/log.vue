@@ -2,13 +2,14 @@
   <div class="a" >
     <div class="pics" >
     <el-carousel height="400px":interval="5000" arrow="always" >
-      <el-carousel-item v-for="item in 4" :key="item">
-        <h3>{{ item }}</h3>
+      <el-carousel-item v-for="item in ImgUrl" :key="item">
+        <img v-bind:src=item height="400px" align="center"/>
       </el-carousel-item>
     </el-carousel>
     </div>
     <h2 align="center" >在线校友录管理系统</h2>
     <div class="b" align="center" >
+
     <el-tabs type="border-card" style="width:40%;":stretch="true" >
       <el-tab-pane label="管理员登录"  >
         <div class="login-wrap" v-show="showLogin" >
@@ -121,7 +122,10 @@
           xyusername: '',
           xypassword: '',
           newUsername: '',
-          newPassword: ''
+          newPassword: '',
+          ImgUrl:[
+            '/static/1.jpg','/static/2.jpg','/static/3.jpg','/static/4.jpg'
+          ]
         }
       }
     };
