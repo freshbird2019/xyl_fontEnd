@@ -41,31 +41,17 @@
         console.log("loading data.")
         this.$ajax({
           method: 'get',
-          url: 'http://localhost:8080/order/findAll',
+          url: 'http://localhost:8088/xyl',
         }).then(response => {
           console.log(response.data);
           for (let i = 0; i < response.data.length; i++) {
-            this.FactoryOrderInfo.push(response.data[i]);
+            this.ClassmateInfo.push(response.data[i]);
           }
         });
       },
       data() {
         return {
-          dialogCreateVisible: false,
-          dialogUpdateVisible: false,
-          create: {
-            orderId: "",
-            orderSource: "",
-            totalPrice: "",
-            remark: ""
-          },
-          update: {
-            orderId: "",
-            orderSource: "",
-            totalPrice: "",
-            remark: ""
-          },
-          FactoryOrderInfo: [],
+         ClassmateInfo: [],
         };
       }
     }

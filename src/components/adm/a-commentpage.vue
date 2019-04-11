@@ -26,19 +26,19 @@
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-row>
-                <el-col :span="5">
+                <el-col :span="7">
                   <el-form-item label="序号：">
                     <span>{{ props.row.lid }}</span>
                   </el-form-item>
                 </el-col>
-                <el-col :span="7">
+                <el-col :span="20">
                   <el-form-item label="留言人：">
                     <span>{{ props.row.name }}</span>
                   </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="20">
                   <el-form-item label="时间：">
-                    <span>{{ props.row.lydate }}</span>
+                    <span>{{ moment(props.row.lydate).format('YYYY-MM-DD HH:mm:ss') }}</span>
                   </el-form-item>
                 </el-col>
                 <el-col>
@@ -63,10 +63,12 @@
 </template>
 
 <script>
+  import moment from 'moment'
   export default {
     name: "s-comment",
     inject:['reload'],
     methods: {
+      moment:moment,
       setCurrent(currentOrder) {
         console.log(currentOrder);
         this.update.orderId = currentOrder.orderId;

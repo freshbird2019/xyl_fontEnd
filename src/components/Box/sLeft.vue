@@ -27,10 +27,10 @@
           <span>活动浏览</span>
         </template>
         <router-link to="/stu/s-actpage">
-          <el-menu-item index="2-1">当前活动信息</el-menu-item>
+          <el-menu-item index="2-1">所有活动信息</el-menu-item>
         </router-link>
         <router-link to="/stu/s-iact">
-          <el-menu-item index="2-2">已参加的活动</el-menu-item>
+          <el-menu-item index="2-2">我参加的活动</el-menu-item>
         </router-link>
       </el-submenu>
 
@@ -44,7 +44,17 @@
           <el-menu-item index="3-1">查看当前留言</el-menu-item>
         </router-link>
         <router-link to="/stu/s-commentcheck">
-          <el-menu-item index="3-2">待审核的留言</el-menu-item>
+          <el-menu-item index="3-2">我的留言</el-menu-item>
+        </router-link>
+      </el-submenu>
+
+      <el-submenu index="4">
+        <template slot="title">
+          <i class="el-icon-edit"style="color:#ffffff"></i>
+          <span>个人信息</span>
+        </template>
+        <router-link to="/stu/s-selfpage">
+          <el-menu-item index="4-1">修改个人信息</el-menu-item>
         </router-link>
       </el-submenu>
 

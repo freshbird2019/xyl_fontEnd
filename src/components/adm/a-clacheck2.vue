@@ -20,12 +20,12 @@
     </el-row>
 
     <!-- 待审批成员信息汇总 -->
-    <el-table :data="FactoryOrderInfo" border>
-      <el-table-column prop="number" label="学号" align="center"></el-table-column>
-      <el-table-column prop="orderId" label="所申请班级" align="center"></el-table-column>
-      <el-table-column prop="orderSource" label="姓名" align="center"></el-table-column>
-      <el-table-column prop="orderSource" label="性别" align="center"></el-table-column>
-      <el-table-column prop="orderSource" label="联系方式" align="center"></el-table-column>
+    <el-table :data="Xy1Info" border>
+      <el-table-column prop="xid" label="学号" align="center"></el-table-column>
+      <el-table-column prop="claname" label="所申请班级" align="center"></el-table-column>
+      <el-table-column prop="name" label="姓名" align="center"></el-table-column>
+      <el-table-column prop="sex" label="性别" align="center"></el-table-column>
+      <el-table-column prop="phone" label="联系方式" align="center"></el-table-column>
       <el-table-column label="操作" width="220" align="center">
         <template slot-scope="scope">
           <el-button
@@ -124,11 +124,15 @@
       console.log("loading data.")
       this.$ajax({
         method:'get',
-        url:'http://localhost:8088/xyl/getAllXy2',
+        url:'http://localhost:8088/xyl/getAllXy1',
       }).then(response=>{
         console.log(response.data);
         for(let i= 0; i<response.data.length;i++) {
-          this.FactoryOrderInfo.push(response.data[i]);
+          let id=response.data[i].xid;
+          this.$ajax.get('http://localhost:8088/xyl/getClanameByXid?xyid='+id).then(res =>{
+            response.data[i].claname=res.data
+          })
+          this.Xy1Info.push(response.data[i]);
         }
       });
     },
@@ -148,7 +152,7 @@
           totalPrice: "",
           remark: ""
         },
-        FactoryOrderInfo: [],
+        Xy1Info: [],
       };
     }
   };

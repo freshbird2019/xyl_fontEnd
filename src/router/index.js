@@ -22,6 +22,7 @@ import sclassmate from '@/components/stu/s-classmate'
 import sactpage from '@/components/stu/s-actpage'
 import siact from '@/components/stu/s-iact'
 import scommentcheck from '@/components/stu/s-commentcheck'
+import sselfpage from '@/components/stu/s-selfpage'
 
 
 import log from '@/components/login/log'
@@ -131,6 +132,11 @@ export default new Router({
               path: '/stu/s-commentcheck',
               name: 'scommentcheck',
               component: scommentcheck
+            },
+            {
+              path: '/stu/s-selfpage',
+              name: 'sselfpage',
+              component: sselfpage
             },
           ]
         }

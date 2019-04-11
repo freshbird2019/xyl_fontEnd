@@ -3,8 +3,7 @@
     <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom:25px">
       <el-breadcrumb-item >首页</el-breadcrumb-item>
       <el-breadcrumb-item>活动浏览</el-breadcrumb-item>
-      <el-breadcrumb-item><b>已参加的活动</b></el-breadcrumb-item>
-    </el-breadcrumb>
+      <el-breadcrumb-item><b>我参加的活动</b></el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-row :gutter="20" class="orderTitle">
@@ -14,18 +13,19 @@
           <i class="el-icon-document"></i>
         </b>
         <span>
-          <b>已申请参加的活动</b>
+          <b>我参加的活动</b>
         </span>
       </el-col>
     </el-row>
 
     <!-- 待审核活动信息汇总 -->
-    <el-table :data="FactoryOrderInfo" border>
-      <el-table-column prop="number" label="活动编号" align="center"></el-table-column>
-      <el-table-column prop="orderId" label="主题" align="center"></el-table-column>
-      <el-table-column prop="orderSource" label="人数" align="center"></el-table-column>
-      <el-table-column prop="orderSource" label="内容" align="center"></el-table-column>
-      <el-table-column prop="orderSource" label="时间" align="center"></el-table-column>
+    <el-table :data="iAcInfo" border>
+      <el-table-column prop="aid" label="活动编号" align="center"></el-table-column>
+      <el-table-column prop="name" label="主题" align="center"></el-table-column>
+      <el-table-column prop="num" label="人数" align="center"></el-table-column>
+      <el-table-column prop="description" label="内容" align="center"></el-table-column>
+      <el-table-column prop="time" label="时间" align="center"></el-table-column>
+      <el-table-column prop="location" label="地点" align="center"></el-table-column>
       <el-table-column label="操作" width="220" align="center">
         <template slot-scope="scope">
           <el-button type="danger" size="small" icon="el-icon-delete" @click="removed(scope.row)">退出</el-button>
@@ -36,6 +36,8 @@
 </template>
 
 <script>
+  import {getCookie} from "../../assets/js/cookie";
+
   export default {
     name: "s-iact",
     inject:['reload'],
@@ -54,7 +56,7 @@
           // 向请求服务端删除
           let orderId = currentOrder.orderId;
           console.log(orderId);
-          this.$ajax.get('http://localhost:8080/order/deleteOne/'+orderId,).then(response=> {
+          this.$ajax.get('http://localhost:8088/order/deleteOne/'+orderId,).then(response=> {
             console.log(response);
             if(response.data=="success"){
               this.open1();
@@ -90,34 +92,21 @@
     },
     mounted(){
       // 加载数据
+      let name=this.xyname
       console.log("loading data.")
-      this.$ajax({
-        method:'get',
-        url:'http://localhost:8080/order/findAll',
-      }).then(response=>{
+      this.$ajax.get('http://127.0.0.1:8088/xyl/getXyAc?name='+name).then(response=>{
         console.log(response.data);
         for(let i= 0; i<response.data.length;i++) {
-          this.FactoryOrderInfo.push(response.data[i]);
+          this.iAcInfo.push(response.data[i]);
         }
       });
     },
     data() {
       return {
+        xyname:getCookie("xyusername"),
         dialogCreateVisible: false,
         dialogUpdateVisible: false,
-        create: {
-          orderId: "",
-          orderSource: "",
-          totalPrice: "",
-          remark: ""
-        },
-        update: {
-          orderId: "",
-          orderSource: "",
-          totalPrice: "",
-          remark: ""
-        },
-        FactoryOrderInfo: [],
+        iAcInfo: [],
       };
     }
   };

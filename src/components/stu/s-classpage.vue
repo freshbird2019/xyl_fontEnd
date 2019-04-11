@@ -30,21 +30,21 @@
               <el-form-item label="班级人数">
                 <span>{{ props.row.number }}</span>
               </el-form-item>
-              <el-form-item label="入学年份">
-                <span>{{ props.row.syear }}</span>
+              <el-form-item label="年份">
+                <span>{{ props.row.year }}</span>
               </el-form-item>
-              <el-form-item label="毕业年份">
-                <span>{{ props.row.fyear }}</span>
+              <el-form-item label="专业">
+                <span>{{ props.row.major }}</span>
               </el-form-item>
-              <el-form-item label="班级口号">
-                <span>{{ props.row.talk }}</span>
+              <el-form-item label="学院">
+                <span>{{ props.row.college }}</span>
               </el-form-item>
             </el-form>
           </template>
         </el-table-column>
         <el-table-column
           label="班级号"
-          prop="id">
+          prop="cid">
         </el-table-column>
         <el-table-column
           label="班级名称"
@@ -52,17 +52,21 @@
         </el-table-column>
         <el-table-column
           label="年份"
-          prop="syear">
+          prop="year">
         </el-table-column>
         <el-table-column
           label="专业"
-          prop="desc">
+          prop="major">
+        </el-table-column>
+        <el-table-column
+          label="学院"
+          prop="college">
         </el-table-column>
         <el-table-column
           label="操作"
           prop="desc">
           <template slot-scope="scope">
-            <el-button type="info"  size="mini" @click="setCurrent(scope.row)"style="background:#C19892;border:none">申请</el-button>
+            <el-button type="info"  size="mini" @click="applyClass(scope.row)"style="background:#C19892;border:none">申请</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -70,73 +74,70 @@
 </template>
 
 <script>
+  import {setCookie,getCookie} from '../../assets/js/cookie.js'
   export default {
     name: "MainBox",
     inject:['reload'],
     methods: {
-      setCurrent(currentOrder) {
-        console.log(currentOrder);
-        this.update.orderId = currentOrder.orderId;
-        this.update.orderSource = currentOrder.orderSource;
-        this.update.totalPrice = currentOrder.totalPrice;
-        this.update.remark = currentOrder.remark;
-        this.dialogUpdateVisible = true;
-        console.log(this.dialogUpdateVisible);
+      applyClass(currentClass) {
+        let data = {'xyname':this.xyname,'classid':currentClass.cid}
+        console.log(data);
+        this.$http.post('http://127.0.0.1:8088/xyl/applyClass',data
+        ).then(response => {
+          console.log(response);
+          this.open1();
+        }).catch(function (error) {
+          console.log("apply failed！")
+        });
       },
+      open1(){
+        this.$message({
+          message:'申请成功，等待审核',
+          type:'success'
+        });
+      }
       },
     mounted(){
       // 加载数据
       console.log("loading data.")
       this.$ajax({
         method:'get',
-        url:'http://localhost:8080/order/findAll',
+        url:'http://localhost:8088/xyl/glClass',
       }).then(response=>{
         console.log(response.data);
         for(let i= 0; i<response.data.length;i++) {
-          this.FactoryOrderInfo.push(response.data[i]);
+          let id=response.data[i].cid;
+          this.$ajax.get('http://localhost:8088/xyl/getClassNumById?classid='+id).then(res =>{
+            response.data[i].number=res.data
+          })
+          this.tableData.push(response.data[i]);
         }
       });
     },
     data() {
       return {
-        update: {
-          orderId: "",
-          orderSource: "",
-          totalPrice: "",
-          remark: ""
-        },
+        xyname:getCookie("xyusername"),
         tableData: [{
-          id: '1',
-          name: '信安1601',
+          cid: '1',
+          name: '计算机1601',
           number: '30',
-          syear: '2016',
-          fyear: '2020',
-          talk:'Good',
-          desc:'计算机'
+          year: '2016',
+          major:'计算机',
+          college:'计算机学院'
         }, {
-          id: '2',
+          cid: '2',
           name: '信安1602',
           number: '32',
-          syear: '2016',
-          fyear: '2020',
-          talk:'Fine',
-          desc:'计算机'
+          year: '2016',
+          major:'信安',
+          college:'计算机学院'
         }, {
-          id: '3',
+          cid: '3',
           name: '软件1601',
           number: '28',
-          syear: '2016',
-          fyear: '2020',
-          talk:'Hello',
-          desc:'计算机'
-        }, {
-          id: '4',
-          name: '软件1602',
-          number: '27',
-          syear: '2016',
-          fyear: '2020',
-          talk:'yeah！',
-          desc:'计算机'
+          year: '2016',
+          major:'软件',
+          college:'计算机学院'
         }]
         }
       }
