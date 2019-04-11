@@ -25,22 +25,22 @@
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-row>
-              <el-col :span="4">
+              <el-col :span="8">
                 <el-form-item label="序号：">
                   <span>{{ props.row.lid }}</span>
                 </el-form-item>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="15">
                 <el-form-item label="留言人：">
                   <span>{{ props.row.name }}</span>
                 </el-form-item>
               </el-col>
-              <el-col :span="14">
+              <el-col  >
                 <el-form-item label="留言时间：">
                   <span>{{moment(props.row.lydate).format('YYYY-MM-DD HH:mm:ss') }}</span>
                 </el-form-item>
               </el-col>
-              <el-col>
+              <el-col >
                 <el-form-item label="内容：">
                   <span>{{ props.row.info }}</span>
                 </el-form-item>
@@ -52,6 +52,9 @@
       <el-table-column
         label="状态"
         prop="state" width="70px">
+      </el-table-column>
+      <el-table-column label="操作" width="80" align="center">
+      <el-button type="danger" size="small" icon="el-icon-delete" @click="removed(scope.row)">删除</el-button>
       </el-table-column>
     </el-table>
   </div>
@@ -83,6 +86,8 @@
       this.$ajax.get('http://127.0.0.1:8088/xyl/xyGetSelfLy?name='+name).then(response=>{
         console.log(response.data);
         for(let i= 0; i<response.data.length;i++) {
+          if(response.data[i].state===1)response.data[i].state="已审核";
+          else response.data[i].state="未审核";
           this.tableData.push(response.data[i]);
         }
       });
@@ -160,5 +165,7 @@
     margin-right: 0;
     margin-bottom: 0;
     width: 50%;
+
   }
+
 </style>

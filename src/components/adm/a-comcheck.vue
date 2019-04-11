@@ -38,7 +38,7 @@
                 </el-col>
                 <el-col :span="12">
                   <el-form-item label="时间：">
-                    <span>{{ props.row.lydate}}</span>
+                    <span>{{ moment(props.row.lydate).format('YYYY-MM-DD HH:mm:ss')}}</span>
                   </el-form-item>
                 </el-col>
                 <el-col>
@@ -64,10 +64,12 @@
 </template>
 
 <script>
+  import moment from 'moment'
   export default {
     name: "s-comment",
     inject:['reload'],
     methods: {
+      moment:moment,
       setCurrent(currentOrder) {
         console.log(currentOrder);
         this.update.orderId = currentOrder.orderId;

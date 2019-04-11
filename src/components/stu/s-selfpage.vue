@@ -17,58 +17,114 @@
         </span>
       </el-col>
     </el-row>
+    <div v-if="flag === 1">
+    <div class="usercenter">
 
+      <div class="user-style">
 
-                  <span>"姓名："{{ nowxyinfo.name }}</span>
+         <div class="userimg-style">
 
+            <img v-bind:src="'../../static/xxyl.jpg'"/>
 
-                  <span>"性别："{{ nowxyinfo.sex}}</span>
+          </div>
+        <div class="username-plus">
 
+          <span><b>{{nowxyinfo.name}}</b></span>
 
-                  <span>"电话："{{ nowxyinfo.phone }}</span>
+        </div>
+        <el-button type="primary" @click="setCurrent()" style="background:#C19892;border:none">修改与完善</el-button>
 
-
-
-                  <span>"邮箱："{{ nowxyinfo.mail }}</span>
-
-
-
-
-                  <span>"地址："{{ nowxyinfo.address }}</span>
-
-
-    <el-col :span="1"  style="margin-left:93%;margin-top:3%;">
-      <el-button type="info" @click="setCurrent()" style="background:#C19892;border:none">修改与完善</el-button>
-    </el-col>
-
-    <el-dialog
-      title="修改成员信息"
-      :visible.sync="dialogUpdateVisible"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-    >
-      <el-form id="#update" :model="update" ref="update" label-width="100px">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="update.name"></el-input>
-        </el-form-item>
-        <el-form-item label="性别" prop="sex">
-          <el-input v-model="update.sex"></el-input>
-        </el-form-item>
-        <el-form-item label="联系方式" prop="phone">
-          <el-input v-model="update.phone"></el-input>
-        </el-form-item>
-        <el-form-item label="邮箱" prop="mail">
-          <el-input v-model="update.mail"></el-input>
-        </el-form-item>
-        <el-form-item label="地址" prop="address">
-          <el-input v-model="update.address"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogUpdateVisible = false">取 消</el-button>
-        <el-button type="primary" @click="Modify">确 定</el-button>
       </div>
-    </el-dialog>
+    <div class="mymess">
+
+      <i  aria-hidden="true"></i>
+
+      &nbsp;&nbsp;姓名<span>{{nowxyinfo.name}}</span>
+
+    </div>
+    <div class="mymess">
+
+      <i  aria-hidden="true"></i>
+
+      &nbsp;&nbsp;性别<span>{{nowxyinfo.sex}}</span>
+
+    </div>
+
+    <div class="mymess">
+
+      <i  aria-hidden="true"></i>
+
+      &nbsp;&nbsp;电话<span>{{nowxyinfo.phone}}</span>
+
+    </div>
+
+    <div class="mymess">
+
+      <i aria-hidden="true"></i>
+
+      &nbsp;&nbsp;邮箱<span>{{nowxyinfo.mail}}</span>
+
+    </div>
+
+    <div class="mymess">
+
+      <i aria-hidden="true"></i>
+
+      &nbsp;&nbsp;地址<span>{{nowxyinfo.address}}</span>
+
+    </div>
+
+    </div>
+    </div>
+
+    <div v-else-if="flag === 2" class="form">
+
+      <div class="usercenter">
+
+        <div class="user-style">
+
+
+          <div class="username-plus"><span>{{nowxyinfo.name}}</span></div>
+
+          <div class="btn-update"><span v-on:click="flag = 1">取消</span></div>
+
+        </div>
+
+      </div>
+
+
+      <div class="input-control" style="margin-top:80px">
+
+        <input type="text" name="username" v-model="update.sex" placeholder="性别" />
+
+      </div>
+
+      <div class="input-control">
+
+        <input type="text" name="username" v-model="update.phone" placeholder="电话" />
+
+      </div>
+
+      <div class="input-control">
+
+        <input type="text" name="username" v-model="update.mail" placeholder="邮箱" />
+
+      </div>
+
+      <div class="input-control">
+
+        <input type="text" name="username" v-model="update.address" placeholder="地址" />
+
+      </div>
+
+      <div class="button-control">
+
+        <input type="button" name="submit" value="提交" v-on:click="submit"/>
+
+      </div>
+
+    </div>
+
   </div>
 </template>
 
@@ -77,6 +133,7 @@
 
     export default {
         name: "s-selfpage",
+      inject:['reload'],
       mounted(){
         // 加载数据
         let name=this.xyname
@@ -88,38 +145,85 @@
       },
       methods:{
         setCurrent() {
-          this.update.name = this.xyInfo.name;
-          this.update.sex = this.xyInfo.sex;
-          this.update.phone = this.xyInfo.phone;
-          this.update.mail=this.xyInfo.mail;
-          this.update.address=this.xyInfo.address;
-          this.dialogUpdateVisible = true;
-          console.log(this.dialogUpdateVisible);
+          this.update.xid=this.nowxyinfo.xid;
+          this.update.name = this.nowxyinfo.name;
+          this.update.sex = this.nowxyinfo.sex;
+          this.update.phone =this.nowxyinfo.phone;
+          this.update.mail=this.nowxyinfo.mail;
+          this.update.address=this.nowxyinfo.address;
+          this.update.state=this.nowxyinfo.state;
+          this.update.pw=this.nowxyinfo.pw;
+          this.flag=2;
         },
-        Modify(){
-          console.log("确定编辑班级成员信息");
-          this.dialogUpdateVisible = false;
+        submit(){
+          this.$confirm(
+            "确认修改?",
+            "提示",
+            {
+              type: "warning"
+            }
+          ).then(() => {
+            console.log("确定编辑班级成员信息");
+            let data = this.update;
+            console.log(JSON.stringify(data));
+            if (this.update.sex === '') {
+              alert("性别不可为空！")
+            }
+            else if (this.update.mail === '') {
+              alert("电话不可为空！")
+            }
+            else if (this.update.phone === '') {
+              alert("邮箱不可为空！")
+            }
+            else {
+              this.$ajax({
+                method: 'post',
+                url: 'http://127.0.0.1:8088/xyl/updateNowin.do',
+                data: data,
+                contentType: "application/json charset=utf-8",
+              }).then((res) => {
+                console.log(res)
+                if (res.data === true) {
+                  console.log(res.data)
+                  this.open();
+                }
+              })
+            }
+          })
+        },
+        open() {
+          this.$message({
+            message: '已成功修改',
+            type: 'success'
+          });
+          this.flag=1;
+          this.reload();
         },
       },
       data(){
         return {
           dialogUpdateVisible: false,
           xyname: getCookie("xyusername"),
+          flag:1,
           nowxyinfo:{
+            xid:"",
           name: "",
             sex: "",
             phone: "",
             mail: "",
             address:"",
-            clazz: []
+            state:"",
+            pw:"",
         },
           update: {
+            xid:"",
             name: "",
             sex: "",
             phone: "",
             mail: "",
             address:"",
-            clazz: []
+            state:"",
+            pw:"",
           },
         };
       },
@@ -148,12 +252,7 @@
     font-size: 24px;
     padding-bottom: 10px;
   }
-  .board {
-    font-size: 20px;
-  }
-  .demo-table-expand {
-    font-size: 0;
-  }
+
   .demo-table-expand label {
     width: 90px;
     color: #99a9bf;
@@ -162,5 +261,204 @@
     margin-right: 0;
     margin-bottom: 0;
     width: 50%;
+  }
+  .usercenter{
+
+    position: relative;
+
+    top:60px;
+
+    width: 100%;
+
+  }
+
+  .usercenter a{
+
+    text-decoration: none;
+
+    color: #2c3e50;
+
+  }
+  .user-style{
+
+    display: flex;
+
+    justify-content: space-between;
+
+    flex-direction: row;
+
+    width: 90%;
+
+    align-items: center;
+
+    padding: 10px 5%;
+
+    box-shadow: 10px 0 10px #ccc;
+
+    cursor: pointer;
+
+  }
+  .userimg-style{
+
+    width:30%;
+
+  }
+
+
+  .username-plus{
+
+    width:60%;
+
+  }
+
+  .username-plus span{
+    font-size:30px;
+  }
+
+  .userimg-style img{
+
+    width:70px;
+
+    height: 70px;
+
+    border-radius: 50%;
+
+  }
+  .mymess{
+
+    width: 90%;
+
+    margin-top:10px;
+
+    padding: 10px 5%;
+
+    box-shadow: 0px 0 2px #ccc;
+
+    cursor: pointer;
+
+  }
+
+
+
+  .mymess img{
+
+    width: 50px;
+
+    height: 50px;
+
+    border-radius: 50%;
+
+  }
+
+
+
+  .mymess span{
+
+    margin-left:30%;
+
+  }
+
+
+
+  .mymess i{
+
+    font-size: 1.2rem;
+
+  }
+
+  .input-control{
+
+    margin: 10px auto;
+
+    width: 80%;
+
+    height: 50px;
+
+  }
+
+
+
+  .input-control input{
+
+    width: 98%;
+
+    padding: 1%;
+
+    outline:none;
+
+    border:2px #f4f4f4 solid;
+
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+
+    -moz-osx-font-smoothing: grayscale;
+
+    color: #2c3e50;
+
+    height: 30px;
+
+    border-radius: 5px;
+
+    background-color: transparent;
+
+  }
+
+
+
+  .input-control input:focus{
+
+    border:2px #58E481 solid;
+
+    border-radius: 5px;
+
+  }
+
+
+
+  input:-webkit-autofill{
+
+    -webkit-box-shadow : 0 0 0px 1000px white inset ;
+
+  }
+
+
+
+  .button-control{
+
+    margin: 0 auto;
+
+    width: 80%;
+
+    height: 50px;
+
+  }
+
+
+
+  .button-control input{
+
+    height: 30px;
+
+    width: 20%;
+
+    outline:none;
+
+    border:0;
+
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+
+    -moz-osx-font-smoothing: grayscale;
+
+    color: #fff;
+
+    background-color: #58E481;
+
+    border-radius: 5px;
+
+    height: 40px;
+
   }
 </style>
