@@ -32,7 +32,7 @@
             icon="el-icon-setting"
             @click="setCurrent(scope.row)"
           >编辑</el-button>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="removed(scope.row)">删除</el-button>
+          <!--<el-button type="danger" size="small" icon="el-icon-delete" @click="removed(scope.row)">删除</el-button>-->
           <el-button type="danger" size="small" icon="el-icon-delete" @click="showMember(scope.row)">成员</el-button>
         </template>
       </el-table-column>

@@ -18,12 +18,12 @@
     </el-row>
 
     <!-- 活动汇总 -->
-    <el-table :data="FactoryOrderInfo" border>
-      <el-table-column prop="number" label="活动编号" align="center"></el-table-column>
-      <el-table-column prop="orderId" label="主题" align="center"></el-table-column>
-      <el-table-column prop="orderSource" label="人数" align="center"></el-table-column>
-      <el-table-column prop="orderSource" label="内容" align="center"></el-table-column>
-      <el-table-column prop="orderSource" label="时间" align="center"></el-table-column>
+    <el-table :data="activityInfo" border>
+      <el-table-column prop="aid" label="活动编号" align="center"></el-table-column>
+      <el-table-column prop="name" label="主题" align="center"></el-table-column>
+      <el-table-column prop="num" label="人数" align="center"></el-table-column>
+      <el-table-column prop="description" label="内容" align="center"></el-table-column>
+      <el-table-column prop="time" label="时间" align="center"></el-table-column>
       <el-table-column label="操作" width="220" align="center">
         <template slot-scope="scope">
           <el-button
@@ -33,6 +33,7 @@
             @click="setCurrent(scope.row)"
           >修改</el-button>
           <el-button type="danger" size="small" icon="el-icon-delete" @click="removed(scope.row)">删除</el-button>
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="showInfo(scope.row)">查看活动信息</el-button>
         </template>
       </el-table-column>
 
@@ -43,20 +44,20 @@
     <!-- 新建活动 -->
     <el-dialog title="发起新活动" :visible.sync="dialogCreateVisible"width="30%" align="center">
       <el-form id="#create" :model="create" ref="create" label-width="100px">
-        <el-form-item label="活动编号" prop="username">
-          <el-input v-model="create.orderId"></el-input>
-        </el-form-item>
         <el-form-item label="主题" prop="name">
-          <el-input v-model="create.orderSource"></el-input>
+          <el-input v-model="create.name"></el-input>
         </el-form-item>
-        <el-form-item label="人数" prop="password">
-          <el-input v-model="create.totalPrice" type="password" auto-complete="off"></el-input>
+        <el-form-item label="人数" prop="num">
+          <el-input v-model="create.num" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="内容" prop="checkpass">
-          <el-input v-model="create.remark" type="password"></el-input>
+        <el-form-item label="内容" prop="description">
+          <el-input v-model="create.description" ></el-input>
         </el-form-item>
-        <el-form-item label="时间" prop="checkpass">
-          <el-input v-model="create.remark" type="password"></el-input>
+        <el-form-item label="时间" prop="time">
+          <el-input v-model="create.time" ></el-input>
+        </el-form-item>
+        <el-form-item label="地点" prop="location">
+          <el-input v-model="create.location"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" align="center">
@@ -74,20 +75,23 @@
       :close-on-press-escape="false"
     >
       <el-form id="#update" :model="update" ref="update" label-width="100px">
-        <el-form-item label="活动编号" prop="orderId">
-          <el-input v-model="update.orderId"></el-input>
+        <el-form-item label="活动编号" prop="aid">
+          <el-input v-model="update.aid"></el-input>
         </el-form-item>
-        <el-form-item label="主题" prop="orderSource">
-          <el-input v-model="update.orderSource"></el-input>
+        <el-form-item label="主题" prop="name">
+          <el-input v-model="update.name"></el-input>
         </el-form-item>
-        <el-form-item label="人数" prop="totalPrice">
-          <el-input v-model="update.totalPrice"></el-input>
+        <el-form-item label="人数" prop="num">
+          <el-input v-model="update.num"></el-input>
         </el-form-item>
-        <el-form-item label="内容" prop="totalPrice">
-          <el-input v-model="update.remark"></el-input>
+        <el-form-item label="内容" prop="description">
+          <el-input v-model="update.description"></el-input>
         </el-form-item>
-        <el-form-item label="时间" prop="checkpass">
-          <el-input v-model="create.remark" type="password"></el-input>
+        <el-form-item label="时间" prop="time">
+          <el-input v-model="update.time" ></el-input>
+        </el-form-item>
+        <el-form-item label="地点" prop="location">
+          <el-input v-model="update.location" ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -105,15 +109,26 @@
     name: "MainBox",
     inject:['reload'],
     methods: {
+
+      // 获取活动报名人信息
+      showInfo(ac) {
+        let id = ac.aid;
+        this.$router.push({
+          // 你要跳转的地址
+          path: '/adm/a-actcheck',
+          query: {
+            aid: id
+          }
+        });
+
+      },
+
       // 新建活动
       createOrder() {
         let data = this.create;
         console.log(data);
-        this.$ajax.post('http://localhost:8080/order/saveOne/', JSON.stringify(data),
-          {
-            headers: { 'Content-Type': 'application/json;charset=UTF-8'}
-          }
-        ).then(response=> {
+        let info = "name="+data.name+"&time="+data.time+"&num="+data.num+"&description="+data.description+"&location="+data.location;
+        this.$http.post('http://localhost:8088/xyl/addAc.do?'+info).then(response=> {
           console.log(response);
           this.dialogCreateVisible=false;
           this.open2();
@@ -123,22 +138,41 @@
       },
       setCurrent(currentOrder) {
         console.log(currentOrder);
-        this.update.orderId = currentOrder.orderId;
-        this.update.orderSource = currentOrder.orderSource;
-        this.update.totalPrice = currentOrder.totalPrice;
-        this.update.remark = currentOrder.remark;
+        this.update.aid = currentOrder.aid;
+        this.update.time = currentOrder.time;
+        this.update.name = currentOrder.name;
+        this.update.num = currentOrder.num;
+        this.update.description = currentOrder.description;
+        this.update.location = currentOrder.location;
         this.dialogUpdateVisible = true;
         console.log(this.dialogUpdateVisible);
       },
       updateOrder() {
         console.log("确定编辑活动信息");
+        let data = this.update;
+
+        let info = "aid="+data.aid+"&name="+data.name+
+          "&time="+data.time+"&location="+data.location+
+          "&description="+data.description+"&num="+data.num;
+
+        console.log(info);
+        this.$http.get('http://localhost:8088/xyl/updateAc?'+info,).then(response=> {
+          console.log(response);
+          if(response.data){
+            this.open4();
+          }
+        }).catch(function (error){
+          console.log("delete failed！")
+        });
+
         this.dialogUpdateVisible = false;
       },
       // 删除订单
       removed(currentOrder) {
         console.log("删除此活动");
+        console.log(currentOrder.aid);
         this.$confirm(
-          "此操作将删除此活动信息 " + currentOrder.orderId + ", 是否继续?",
+          "此操作将删除此活动信息 " + currentOrder.aid + ", 是否继续?",
           "提示",
           {
             type: "warning"
@@ -146,11 +180,11 @@
         ).then(() => {
           console.log("确认删除活动");
           // 向请求服务端删除
-          let orderId = currentOrder.orderId;
+          let orderId = currentOrder.aid;
           console.log(orderId);
-          this.$ajax.get('http://localhost:8080/order/deleteOne/'+orderId,).then(response=> {
+          this.$ajax.get('http://localhost:8088/xyl/deleteAc.do?id='+orderId,).then(response=> {
             console.log(response);
-            if(response.data=="success"){
+            if(response.data){
               this.open1();
             }
           }).catch(function (error){
@@ -181,17 +215,24 @@
           type: 'warning'
         });
       },
+      open4() {
+        this.$message({
+          message: '已成功修改活动',
+          type: 'success'
+        });
+        this.reload();
+      },
     },
     mounted(){
       // 加载数据
       console.log("loading data.")
       this.$ajax({
         method:'get',
-        url:'http://localhost:8080/order/findAll',
+        url:'http://localhost:8088/xyl/activityPg',
       }).then(response=>{
         console.log(response.data);
         for(let i= 0; i<response.data.length;i++) {
-          this.FactoryOrderInfo.push(response.data[i]);
+          this.activityInfo.push(response.data[i]);
         }
       });
     },
@@ -199,19 +240,24 @@
       return {
         dialogCreateVisible: false,
         dialogUpdateVisible: false,
+        url: "http://localhost:8099/ThirdDemo/",
         create: {
-          orderId: "",
-          orderSource: "",
-          totalPrice: "",
-          remark: ""
+          aid: "",
+          name: "",
+          time: "",
+          location: "",
+          num: "",
+          description: ""
         },
         update: {
-          orderId: "",
-          orderSource: "",
-          totalPrice: "",
-          remark: ""
+          aid: "",
+          name: "",
+          time: "",
+          location: "",
+          num: "",
+          description: ""
         },
-        FactoryOrderInfo: [],
+        activityInfo: [],
       };
     }
   };

@@ -14,7 +14,7 @@
           <i class="el-icon-document"></i>
         </b>
         <span>
-          <b>已审核班级成员列表</b>
+          <b>班级成员列表</b>
         </span>
       </el-col>
     </el-row>
@@ -34,7 +34,7 @@
             icon="el-icon-setting"
             @click="setCurrent(scope.row)"
           >编辑</el-button>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="removed(scope.row)">踢出班级</el-button>
+          <!--<el-button type="danger" size="small" icon="el-icon-delete" @click="removed(scope.row)">踢出班级</el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -138,6 +138,7 @@
       // 加载数据
       // 获取班级id
       let cid = this.$route.query.cid;
+      console.log(cid)
       console.log("loading data.")
 
       this.$ajax.get('http://localhost:8088/xyl/displayMember?id='+cid).then(response=> {
@@ -145,6 +146,8 @@
         for(let i= 0; i<response.data.length;i++) {
           if(response.data[i].state==1)
             this.xyInfo.push(response.data[i]);
+          else
+            this.checkXy.push(response.data[i]);
         }
       });
     },
@@ -169,6 +172,7 @@
           clazz: []
         },
         xyInfo: [],
+        checkXy:[]
       };
     }
   };

@@ -1,85 +1,85 @@
 <template>
   <div>
-  <div class="mainBox">
-    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom:25px">
-      <el-breadcrumb-item >首页</el-breadcrumb-item>
-      <el-breadcrumb-item>留言浏览</el-breadcrumb-item>
-      <el-breadcrumb-item><b>查看当前留言</b></el-breadcrumb-item>
-    </el-breadcrumb>
+    <div class="mainBox">
+      <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom:25px">
+        <el-breadcrumb-item >首页</el-breadcrumb-item>
+        <el-breadcrumb-item>留言浏览</el-breadcrumb-item>
+        <el-breadcrumb-item><b>查看当前留言</b></el-breadcrumb-item>
+      </el-breadcrumb>
 
-    <el-row :gutter="20" class="orderTitle">
-      <!--标题-->
-      <el-col :span="2.5">
-        <b>
-          <i class="el-icon-document"></i>
-        </b>
-        <span>
-          <b>留言板</b>
-        </span>
-      </el-col>
-    </el-row>
-    <!-- 留言汇总 -->
-    <el-table
-      :data="tableData"
-      style="width: 100%">
-      <el-table-column >
-        <template slot-scope="props">
-          <el-form label-position="left" inline class="demo-table-expand">
-            <el-row>
-              <el-col :span="5">
-            <el-form-item label="序号：">
-              <span>{{ props.row.lid }}</span>
-            </el-form-item>
-              </el-col>
-              <el-col :span="7">
-            <el-form-item label="留言人：">
-              <span>{{ props.row.name }}</span>
-            </el-form-item>
-              </el-col>
-              <el-col :span="12">
-            <el-form-item label="时间：">
-              <span>{{ moment(props.row.lydate).format('YYYY-MM-DD HH:mm:ss')}}</span>
-            </el-form-item>
-              </el-col>
-              <el-col>
-            <el-form-item label="内容：">
-              <span>{{ props.row.info }}</span>
-            </el-form-item>
-              </el-col>
-              </el-row>
-          </el-form>
-        </template>
-      </el-table-column>
-    </el-table>
-    <div class="board">
-      <el-row :gutter="20" class="orderTitle" style="margin-top:3%;">
+      <el-row :gutter="20" class="orderTitle">
+        <!--标题-->
         <el-col :span="2.5">
           <b>
-            <i class="el-icon-edit"></i>
+            <i class="el-icon-document"></i>
           </b>
           <span>
-          <b>留言</b>
+          <b>留言板</b>
         </span>
         </el-col>
       </el-row>
-      <el-row class="board" style="margin-top:1%;">
-      <el-col :span="2.5">
+      <!-- 留言汇总 -->
+      <el-table
+        :data="tableData"
+        style="width: 100%">
+        <el-table-column >
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-row>
+                <el-col :span="5">
+                  <el-form-item label="序号：">
+                    <span>{{ props.row.lid }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="7">
+                  <el-form-item label="留言人：">
+                    <span>{{ props.row.name }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="时间：">
+                    <span>{{ moment(props.row.lydate).format('YYYY-MM-DD HH:mm:ss')}}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col>
+                  <el-form-item label="内容：">
+                    <span>{{ props.row.info }}</span>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+            </el-form>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="board">
+        <el-row :gutter="20" class="orderTitle" style="margin-top:3%;">
+          <el-col :span="2.5">
+            <b>
+              <i class="el-icon-edit"></i>
+            </b>
+            <span>
+          <b>留言</b>
+        </span>
+          </el-col>
+        </el-row>
+        <el-row class="board" style="margin-top:1%;">
+          <el-col :span="2.5">
         <span>
           <b>请输入你想发表的内容：</b>
         </span>
-      </el-col>
-      </el-row>
+          </el-col>
+        </el-row>
+      </div>
     </div>
-  </div>
 
-  <el-input
-    type="textarea"
-    :rows="2"
-    placeholder="请输入内容"
-    v-model="textarea"
-  style="margin-top:2%;"
-    rows="6">
-  </el-input>
+    <el-input
+      type="textarea"
+      :rows="2"
+      placeholder="请输入内容"
+      v-model="textarea"
+      style="margin-top:2%;"
+      rows="6">
+    </el-input>
     <el-col :span="1"  style="margin-left:93%;margin-top:3%;">
       <el-button type="info" @click="ToComment" style="background:#C19892;border:none">发表</el-button>
     </el-col>
@@ -161,7 +161,7 @@
           state:'已审核',
           info:'我贪得无厌想要你的全部。'
         }],
-          textarea: ''
+        textarea: ''
 
       }
     }
