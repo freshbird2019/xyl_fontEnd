@@ -123,8 +123,6 @@
       }).then(response=>{
         console.log(response.data);
         for(let i= 0; i<response.data.length;i++) {
-          if(response.data[i].state===1)response.data[i].state="已审核";
-          else response.data[i].state="未审核";
           this.tableData.push(response.data[i]);
         }
       });

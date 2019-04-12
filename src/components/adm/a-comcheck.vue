@@ -33,7 +33,7 @@
                 </el-col>
                 <el-col :span="7">
                   <el-form-item label="留言人：">
-                    <span>{{ props.row.name }}</span>
+                    <span>{{ props.row.xyByLyxid.name }}</span>
                   </el-form-item>
                 </el-col>
                 <el-col :span="12">

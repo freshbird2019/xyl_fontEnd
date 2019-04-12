@@ -1,6 +1,5 @@
 <template>
   <div>
-
     <el-row>
       <el-col :span="8">
         <el-input id="name" v-model="name"  placeholder="请输入帐号">

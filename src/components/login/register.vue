@@ -1,12 +1,5 @@
 <template>
   <div>
-    <div class="pics" height="150px">
-      <el-carousel :interval="5000" arrow="always">
-        <el-carousel-item v-for="item in 4" :key="item">
-          <h3>{{ item }}</h3>
-        </el-carousel-item>
-      </el-carousel>
-    </div>
     <h3 align="center">注册</h3>
     <div class="b" align="center" >
       <el-tabs type="border-card" style="width:50%;" :stretch="true">

@@ -33,12 +33,17 @@
                 </el-col>
                 <el-col :span="20">
                   <el-form-item label="留言人：">
-                    <span>{{ props.row.name }}</span>
+                    <span>{{ props.row.xyByLyxid.name }}</span>
                   </el-form-item>
                 </el-col>
                 <el-col :span="20">
                   <el-form-item label="时间：">
                     <span>{{ moment(props.row.lydate).format('YYYY-MM-DD HH:mm:ss') }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="是否精选：">
+                    <span>{{ props.row.best}}</span>
                   </el-form-item>
                 </el-col>
                 <el-col>
@@ -55,6 +60,7 @@
           prop="state" width="100px">
           <template slot-scope="scope">
             <el-button type="danger" size="small" icon="el-icon-delete" style="border:none"@click="removed(scope.row)">删除</el-button>
+            <el-button type="primary" size="mini" icon="el-icon-setting" @click="asBest(scope.row)">精选</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -77,6 +83,21 @@
         this.update.remark = currentOrder.remark;
         this.dialogUpdateVisible = true;
         console.log(this.dialogUpdateVisible);
+      },
+
+      // 设置精选留言
+      asBest(curr) {
+        console.log("精选留言");
+        let lid=curr.lid;
+        this.$ajax({
+          method: "GET",
+          url: 'http://localhost:8088/xyl/asBest.do?lid='+lid,
+        }).then(response=> {
+          console.log(response);
+          this.open2();
+        }).catch(function (error){
+          console.log(error)
+        });
       },
       // 删除留言
       removed(currentLy) {
@@ -111,6 +132,13 @@
           type: 'success'
         });
         this.reload();
+      },
+      open2() {
+        this.$message({
+          message: '精选成功',
+          type: 'success'
+        });
+        this.reload();
       }
     },
     mounted(){
@@ -134,31 +162,7 @@
           totalPrice: "",
           remark: ""
         },
-        tableData: [{
-          lid: '1',
-          name: '李泽言',
-          lydate:'2019.03.02 19:12:58',
-          state:'已审核',
-          info:'不能回头，就走的更远吧。'
-        }, {
-          lid: '2',
-          name: '白起',
-          lydate:'2019.03.02 19:12:58',
-          state:'已审核',
-          info:'只要你在风里，我就感知得到。'
-        }, {
-          lid: '3',
-          name: '周棋洛',
-          lydate:'2019.03.02 19:12:58',
-          state:'已审核',
-          info:'千万人的喜欢，不及你一个人的重要。'
-        }, {
-          lid: '4',
-          name: '许墨',
-          lydate:'2019.03.02 19:12:58',
-          state:'已审核',
-          info:'我贪得无厌想要你的全部。'
-        }],
+        tableData: [],
         textarea: ''
 
       }

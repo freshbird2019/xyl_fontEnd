@@ -7,20 +7,20 @@
         <font size="5">活动提醒</font>
         </span>
     <el-table
-      :data="tableData"
+      :data="acInfo"
       background-color="#B68C8C"
       style="width: 90%;margin-left:15px;margin-top:15px;border-radius:4px;box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1)"
       :row-style="tableRowStyle"
       :header-cell-style="tableHeaderColor"
     >
       <el-table-column
-        prop="date"
+        prop="time"
         label="日期"
         width="80"
       >
       </el-table-column>
       <el-table-column
-        prop="tittle"
+        prop="name"
         label="活动名称">
       </el-table-column>
     </el-table>
@@ -32,6 +32,7 @@
     name: 'table',
     data() {
       return {
+        acInfo: []
       }
     },
     created() {
@@ -47,7 +48,20 @@
           return 'background-color:#B68C8C;color: #fff;font-weight: 500;'
         }
       }
-    }
+    },
+    mounted(){
+      // 加载数据
+      console.log("loading data.")
+      this.$ajax({
+        method:'get',
+        url:'http://127.0.0.1:8088/xyl/activityPg',
+      }).then(response=>{
+        console.log(response.data);
+        for(let i= 0; i<response.data.length;i++) {
+          this.acInfo.push(response.data[i]);
+        }
+      });
+    },
   }
 
 </script>

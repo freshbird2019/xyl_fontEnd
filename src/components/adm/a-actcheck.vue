@@ -26,16 +26,16 @@
       <el-table-column prop="sex" label="性别" align="center"></el-table-column>
       <el-table-column prop="phone" label="电话" align="center"></el-table-column>
       <el-table-column prop="mail" label="邮箱" align="center"></el-table-column>
-      <el-table-column label="操作" width="220" align="center">
-        <template slot-scope="scope">
-          <el-button
-            type="primary"
-            size="mini"
-            icon="el-icon-setting"
-            @click="setCurrent(scope.row)"
-          >通过</el-button>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="removed(scope.row)">拒绝</el-button>
-        </template>
+      <!--<el-table-column label="操作" width="220" align="center">-->
+        <!--<template slot-scope="scope">-->
+          <!--<el-button-->
+            <!--type="primary"-->
+            <!--size="mini"-->
+            <!--icon="el-icon-setting"-->
+            <!--@click="setCurrent(scope.row)"-->
+          <!--&gt;通过</el-button>-->
+          <!--<el-button type="danger" size="small" icon="el-icon-delete" @click="removed(scope.row)">拒绝</el-button>-->
+        <!--</template>-->
       </el-table-column>
     </el-table>
   </div>

@@ -9,7 +9,6 @@
     </div>
     <h2 align="center" >在线校友录管理系统</h2>
     <div class="b" align="center" >
-
     <el-tabs type="border-card" style="width:40%;":stretch="true" >
       <el-tab-pane label="管理员登录"  >
         <div class="login-wrap" v-show="showLogin" >
@@ -18,7 +17,7 @@
           <input type="password" placeholder="请输入密码" v-model="password">
           <el-button type="info" @click="loginGly"style="background:#D79B7C;border:none">登 录</el-button>
           <router-link to="/stu/s-welcome">
-            <el-button type="info" style="background:#D79B7C;border:none">测 试</el-button>
+            <!--<el-button type="info" style="background:#D79B7C;border:none">测 试</el-button>-->
           </router-link>
         </div>
       </el-tab-pane>
@@ -30,13 +29,45 @@
           <el-button type="info" @click="loginXy"style="background:#D79B7C;border:none">登 录</el-button>
           <el-button type="info" @click="ToRegister"style="background:#D79B7C;border:none">注 册</el-button>
           <router-link to="/adm/a-welcome">
-          <el-button type="info" style="background:#D79B7C;border:none">测 试</el-button>
+          <!--<el-button type="info" style="background:#D79B7C;border:none">测 试</el-button>-->
           </router-link>
         </div>
       </el-tab-pane>
     </el-tabs>
     </div>
-  </div>
+
+    <!--显示精选留言-->
+    <div align="center">
+      <h1>精选留言</h1>
+      <div class="col-md-8" v-for="item in ly">
+        <div class="quote">
+          <span class="text">{{item.info}}</span>
+          <span>by:
+            <small class="author">{{item.xyByLyxid.name}}</small>
+          </span>
+        </div>
+    </div>
+    </div>
+      <!--显示热门活动-->
+      <div align="center">
+        <h1>热门活动</h1>
+        <div class="col-md-8" v-for="item in ac">
+          <div class="quote">
+            <span class="text">{{item.description}}</span>
+            <span>by:
+            <small class="author">{{item.name}}</small>
+          </span>
+          </div>
+        </div>
+      </div>
+      <!--<div style="width: 90%; align-content: center">-->
+        <!--<div id="left">hah</div>-->
+        <!--<div id="right">heh</div>-->
+      <!--</div>-->
+
+    </div>
+
+
 </template>
 
 
@@ -110,6 +141,29 @@
         this.$router.push('/login/register')
       },
     },
+    mounted(){
+      console.log("ly")
+      this.$ajax({
+        method:'get',
+        url:'http://localhost:8088/xyl/xyGetAllLy',
+      }).then(response=>{
+        console.log(response.data);
+        for(let i= 0; i<response.data.length;i++) {
+          if(response.data[i].best ==1)
+              this.ly.push(response.data[i]);
+        }
+      });
+
+      this.$ajax({
+        method:'get',
+        url:'http://localhost:8088/xyl/activityPg',
+      }).then(response=>{
+        console.log(response.data);
+        for(let i= 0; i<response.data.length;i++) {
+          this.ac.push(response.data[i]);
+        }
+      });
+    },
 
     data(){
         return{
@@ -125,7 +179,9 @@
           newPassword: '',
           ImgUrl:[
             '/static/1.jpg','/static/2.jpg','/static/3.jpg','/static/4.jpg'
-          ]
+          ],
+          ly:[],
+          ac:[]
         }
       }
     };
@@ -164,6 +220,58 @@
   .el-tabs__item.is-active{
     background-color:#ffffff;
     color:#D79B7C!important;
+  }
 
+  .quote {
+    padding: 10px;
+    margin-bottom: 30px;
+    border: 1px solid #333333;
+    border-radius: 5px;
+    box-shadow: 2px 2px 3px #333333;
+  }
+  .col-md-8 {
+    width: 66.66666667%;
+  }
+
+  .quote span.text {
+    display: block;
+    margin-bottom: 5px;
+    font-size: large;
+    font-style: italic;
+  }
+
+  .quote small.author {
+    font-weight: bold;
+    color: #3677E8;
+  }
+  small, .small {
+    font-size: 87%;
+  }
+  small {
+    font-size: 80%;
+  }
+
+  #ly {
+    float: left;
+    /*background: aliceblue;*/
+  }
+  #ac{
+    float: right;
+  }
+
+  #left{
+    float: left;
+    width: 70%;
+    margin: 10px;
+    background: cornsilk;
+    height: 500px;
+  }
+
+  #right {
+    float: right;
+    width: 25%;
+    margin: 10px;
+    background: azure;
+    height:500px;
   }
 </style>

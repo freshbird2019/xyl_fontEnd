@@ -34,7 +34,7 @@
             icon="el-icon-setting"
             @click="setCurrent(scope.row)"
           >编辑</el-button>
-          <!--<el-button type="danger" size="small" icon="el-icon-delete" @click="removed(scope.row)">踢出班级</el-button>-->
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="removed(scope.row)">踢出班级</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -86,11 +86,12 @@
         console.log("确定编辑班级成员信息");
         this.dialogUpdateVisible = false;
       },
-      // 删除订单
+      // 将同学从班级中踢出，状态变为0
       removed(currentOrder) {
         console.log("踢出班级");
+        let id = currentOrder.xid;
         this.$confirm(
-          "此操作将将该同学提出班级 " + currentOrder.orderId + ", 是否继续?",
+          "此操作将将该同学提出班级 " + id + ", 是否继续?",
           "提示",
           {
             type: "warning"
@@ -98,9 +99,10 @@
         ).then(() => {
           console.log("确认踢出该同学");
           // 向请求服务端删除
-          let orderId = currentOrder.xid;
+          let id = currentOrder.xid;
+          let state = 0;
           console.log(orderId);
-          this.$ajax.get('http://localhost:8088/xyl/deleteClaMember?xid='+orderId+"&name="+currentOrder.name,).then(response=> {
+          this.$ajax.get('http://localhost:8088/xyl/apply.do?xid='+id+'&state='+state,).then(response=> {
             console.log(response);
             if(response.data){
               this.open1();
@@ -144,7 +146,7 @@
       this.$ajax.get('http://localhost:8088/xyl/displayMember?id='+cid).then(response=> {
         console.log(response.data);
         for(let i= 0; i<response.data.length;i++) {
-          if(response.data[i].state==1)
+          if(response.data[i].state==2)
             this.xyInfo.push(response.data[i]);
           else
             this.checkXy.push(response.data[i]);

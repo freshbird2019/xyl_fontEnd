@@ -4,7 +4,7 @@
       <el-breadcrumb-item >首页</el-breadcrumb-item>
       <el-breadcrumb-item>班级管理</el-breadcrumb-item>
       <el-breadcrumb-item>管理班级成员</el-breadcrumb-item>
-      <el-breadcrumb-item><b>未审核成员</b></el-breadcrumb-item>
+      <el-breadcrumb-item><b>待审核成员</b></el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-row :gutter="20" class="orderTitle">
@@ -14,15 +14,15 @@
           <i class="el-icon-document"></i>
         </b>
         <span>
-          <b>未审核班级成员列表</b>
+          <b>待审核班级成员列表</b>
         </span>
       </el-col>
     </el-row>
 
     <!-- 待审批成员信息汇总 -->
-    <el-table :data="Xy1Info" border>
+    <el-table :data="xyInfo" border>
       <el-table-column prop="xid" label="学号" align="center"></el-table-column>
-      <el-table-column prop="claname" label="所申请班级" align="center"></el-table-column>
+      <el-table-column prop="clazzByClassid.Cid" label="所申请班级" align="center"></el-table-column>
       <el-table-column prop="name" label="姓名" align="center"></el-table-column>
       <el-table-column prop="sex" label="性别" align="center"></el-table-column>
       <el-table-column prop="phone" label="联系方式" align="center"></el-table-column>
@@ -32,7 +32,7 @@
             type="primary"
             size="mini"
             icon="el-icon-setting"
-            @click="setCurrent(scope.row)"
+            @click="pass(scope.row)"
           >通过</el-button>
           <el-button type="danger" size="small" icon="el-icon-delete" @click="removed(scope.row)">拒绝</el-button>
         </template>
@@ -71,23 +71,52 @@
         this.dialogUpdateVisible = true;
         console.log(this.dialogUpdateVisible);
       },
-      // 拒绝申请
-      removed(currentOrder) {
-        console.log("拒绝申请");
+      //同意申请
+      pass(curr) {
         this.$confirm(
-          "此操作将拒绝该同学的申请 " + currentOrder.orderId + ", 是否继续?",
+          "此操作将通过该同学的申请 " + curr.xid + ", 是否继续?",
           "提示",
           {
             type: "warning"
           }
         ).then(() => {
-          console.log("确认拒绝申请");
+          console.log("确认同意申请");
           // 向请求服务端删除
-          let orderId = currentOrder.orderId;
-          console.log(orderId);
-          this.$ajax.get('http://localhost:8080/order/deleteOne/'+orderId,).then(response=> {
+          let id = curr.xid;
+          let state = 2;
+          console.log(id);
+          this.$ajax.get('http://localhost:8088/xyl/apply.do?xid='+id+'&state='+state,).then(response=> {
             console.log(response);
-            if(response.data=="success"){
+            if(response.data){
+              this.open2();
+            }
+          }).catch(function (error){
+            console.log("delete failed！")
+          });
+        })
+          .catch(() => {
+            this.$message.info("已取消操作!");
+          });
+
+      },
+      // 拒绝申请
+      removed(currentOrder) {
+        console.log("拒绝申请");
+        this.$confirm(
+          "此操作将拒绝该同学的申请 " + currentOrder.xid + ", 是否继续?",
+          "提示",
+          {
+            type: "warning"
+          }
+        ).then(() => {
+          console.log("确认同意申请");
+          // 向请求服务端删除
+          let id = currentOrder.xid;
+          let state = 0;
+          console.log(id);
+          this.$ajax.get('http://localhost:8088/xyl/apply.do?xid='+id+'&state='+state,).then(response=> {
+            console.log(response);
+            if(response.data){
               this.open1();
             }
           }).catch(function (error){
@@ -128,11 +157,7 @@
       }).then(response=>{
         console.log(response.data);
         for(let i= 0; i<response.data.length;i++) {
-          let id=response.data[i].xid;
-          this.$ajax.get('http://localhost:8088/xyl/getClanameByXid?xyid='+id).then(res =>{
-            response.data[i].claname=res.data
-          })
-          this.Xy1Info.push(response.data[i]);
+          this.xyInfo.push(response.data[i]);
         }
       });
     },
@@ -141,18 +166,20 @@
         dialogCreateVisible: false,
         dialogUpdateVisible: false,
         create: {
-          orderId: "",
-          orderSource: "",
-          totalPrice: "",
-          remark: ""
+          xid: "",
+          name: "",
+          sex: "",
+          phone: "",
+          mail: "",
         },
         update: {
-          orderId: "",
-          orderSource: "",
-          totalPrice: "",
-          remark: ""
+          xid: "",
+          name: "",
+          sex: "",
+          phone: "",
+          mail: "",
         },
-        Xy1Info: [],
+        xyInfo: [],
       };
     }
   };

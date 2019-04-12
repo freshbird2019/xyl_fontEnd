@@ -33,8 +33,8 @@
             icon="el-icon-setting"
             @click="setCurrent(scope.row)"
           >修改</el-button>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="removed(scope.row)">删除</el-button>
-          <el-button type="danger" size="small" icon="el-icon-delete" @click="showInfo(scope.row)">查看活动信息</el-button>
+          <!--<el-button type="danger" size="small" icon="el-icon-delete" @click="removed(scope.row)">删除</el-button>-->
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="showInfo(scope.row)">成员</el-button>
         </template>
       </el-table-column>
 
