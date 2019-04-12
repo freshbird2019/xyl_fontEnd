@@ -117,28 +117,7 @@
     data() {
       return {
         xyname:getCookie("xyusername"),
-        tableData: [{
-          cid: '1',
-          name: '计算机1601',
-          number: '30',
-          year: '2016',
-          major:'计算机',
-          college:'计算机学院'
-        }, {
-          cid: '2',
-          name: '信安1602',
-          number: '32',
-          year: '2016',
-          major:'信安',
-          college:'计算机学院'
-        }, {
-          cid: '3',
-          name: '软件1601',
-          number: '28',
-          year: '2016',
-          major:'软件',
-          college:'计算机学院'
-        }]
+        tableData: []
         }
       }
     };

@@ -74,6 +74,14 @@
 
     </div>
 
+      <div class="mymess">
+
+        <i aria-hidden="true"></i>
+
+        &nbsp;&nbsp;所在班级<span>{{nowxyinfo.clazzByClassid.Cid}}</span>
+
+      </div>
+
     </div>
     </div>
 
@@ -206,14 +214,14 @@
           xyname: getCookie("xyusername"),
           flag:1,
           nowxyinfo:{
-            xid:"",
+           /* xid:"",
           name: "",
             sex: "",
             phone: "",
             mail: "",
             address:"",
             state:"",
-            pw:"",
+            pw:"",*/
         },
           update: {
             xid:"",

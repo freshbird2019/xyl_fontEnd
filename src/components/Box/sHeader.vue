@@ -13,12 +13,7 @@
           <el-dropdown-menu slot="dropdown">
             <!-- 1、设置跳转链接：router-link to="路由路径" -->
             <el-dropdown-item>
-              <router-link to="/login/log">
-                修改个人资料
-              </router-link>
-            </el-dropdown-item>
-            <el-dropdown-item>
-              <router-link to="/components/login/log">
+              <router-link to="/">
                 退出
               </router-link>
             </el-dropdown-item>
