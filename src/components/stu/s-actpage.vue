@@ -40,6 +40,7 @@
     <el-col :span="1"  style="margin-left:89%;margin-top:3%;">
       <el-button type="info" @click="dialogCreateVisible = true" style="background:#C19892;border:none">发起新活动</el-button>
     </el-col>
+
     <!-- 新建活动 -->
     <el-dialog title="发起新活动" :visible.sync="dialogCreateVisible"label-width="100px"align="center">
       <el-form id="#create" :model="create" ref="create" label-width="100px">
@@ -137,7 +138,6 @@
         return {
           xyname:getCookie('xyusername'),
           dialogCreateVisible: false,
-          dialogUpdateVisible: false,
           create: {
             aid: "",
             name: "",

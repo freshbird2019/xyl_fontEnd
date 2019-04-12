@@ -37,22 +37,31 @@
       </div>
     <div class="mymess">
 
-      <i  aria-hidden="true"></i>
+      <i  class="icon-el-icon-people" aria-hidden="true"></i>
 
       &nbsp;&nbsp;姓名<span>{{nowxyinfo.name}}</span>
 
     </div>
     <div class="mymess">
 
-      <i  aria-hidden="true"></i>
+      <i  class="icon-sex" aria-hidden="true"></i>
 
       &nbsp;&nbsp;性别<span>{{nowxyinfo.sex}}</span>
 
     </div>
 
+
+      <div class="mymess">
+
+        <i class="icon-class" aria-hidden="true"></i>
+
+        &nbsp;&nbsp;班级<span>{{this.nowclassname}}</span>
+
+      </div>
+
     <div class="mymess">
 
-      <i  aria-hidden="true"></i>
+      <i  class="el-icon-phone" aria-hidden="true"></i>
 
       &nbsp;&nbsp;电话<span>{{nowxyinfo.phone}}</span>
 
@@ -60,7 +69,7 @@
 
     <div class="mymess">
 
-      <i aria-hidden="true"></i>
+      <i class="el-icon-message" aria-hidden="true" ></i>
 
       &nbsp;&nbsp;邮箱<span>{{nowxyinfo.mail}}</span>
 
@@ -68,19 +77,11 @@
 
     <div class="mymess">
 
-      <i aria-hidden="true"></i>
+      <i class="el-icon-location" aria-hidden="true"></i>
 
       &nbsp;&nbsp;地址<span>{{nowxyinfo.address}}</span>
 
     </div>
-
-      <div class="mymess">
-
-        <i aria-hidden="true"></i>
-
-        &nbsp;&nbsp;所在班级<span>{{nowxyinfo.clazzByClassid.Cid}}</span>
-
-      </div>
 
     </div>
     </div>
@@ -149,18 +150,20 @@
         this.$http.post('http://127.0.0.1:8088/xyl/getXyByname?xyname='+name).then(response=>{
           console.log(response.data);
           this.nowxyinfo=response.data;
+          if(response.data.clazzByClassid===null){
+            if(response.data.state===0)
+            this.nowclassname="还没有班级，快去加入班级吧";
+            else if(response.data.state===1)
+              this.nowclassname="还未通过申请，请耐心等待哦"
+          }
+          else {
+            this.nowclassname=response.data.clazzByClassid.Major+response.data.clazzByClassid.Name;
+          }
         });
       },
       methods:{
         setCurrent() {
-          this.update.xid=this.nowxyinfo.xid;
-          this.update.name = this.nowxyinfo.name;
-          this.update.sex = this.nowxyinfo.sex;
-          this.update.phone =this.nowxyinfo.phone;
-          this.update.mail=this.nowxyinfo.mail;
-          this.update.address=this.nowxyinfo.address;
-          this.update.state=this.nowxyinfo.state;
-          this.update.pw=this.nowxyinfo.pw;
+          this.update=this.nowxyinfo;
           this.flag=2;
         },
         submit(){
@@ -195,6 +198,8 @@
                   console.log(res.data)
                   this.open();
                 }
+              }).catch(function (error){
+                this.open1();
               })
             }
           })
@@ -207,6 +212,13 @@
           this.flag=1;
           this.reload();
         },
+        open1() {
+          this.$message({
+            message: '修改失败，请重试',
+            type: 'fail'
+          });
+          this.reload();
+        },
       },
       data(){
         return {
@@ -214,14 +226,6 @@
           xyname: getCookie("xyusername"),
           flag:1,
           nowxyinfo:{
-           /* xid:"",
-          name: "",
-            sex: "",
-            phone: "",
-            mail: "",
-            address:"",
-            state:"",
-            pw:"",*/
         },
           update: {
             xid:"",
@@ -232,13 +236,17 @@
             address:"",
             state:"",
             pw:"",
+            classinfo:{},
           },
+          nowclassname:"",
         };
       },
     }
 </script>
 
 <style scoped>
+  @import "../../../static/icon1/iconfont.css";
+  @import "../../../static/icon2/iconfont.css";
   h1,
   h2 {
     font-weight: normal;

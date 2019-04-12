@@ -65,30 +65,35 @@
   export default {
     name: "s-classmate",
     inject: ['reload'],
-    methods: {},
+    methods: {
+    },
+
     mounted() {
       // 加载数据
       let name=this.xyname;
       console.log(name);
-      this.$ajax.get('http://localhost:8088/xyl/getXyByname?xyname='+name).then(res=> {
+      this.$http.post('http://localhost:8088/xyl/getXyByname?xyname='+name).then(res=> {
         console.log(res.data);
+        console.log("ok");
         this.nowxy=res.data;
-      });
-      let cid = this.nowxycid;
-      console.log(cid)
-      console.log("loading data.")
 
-     this.$ajax.get('http://localhost:8088/xyl/displayMember?id='+cid).then(response=> {
-        console.log(response.data);
-        for(let i= 0; i<response.data.length;i++) {
-          if(response.data[i].state===2)
-            this.ClassmateInfo.push(response.data[i]);
-        }
+        let cid=this.nowxy.clazzByClassid.Cid;
+        console.log(cid)
+        console.log("loading data.")
+
+        this.$ajax.get('http://localhost:8088/xyl/displayMember?id='+cid).then(response=> {
+          console.log(response.data);
+          for(let i= 0; i<response.data.length;i++) {
+            if(response.data[i].state===2)
+              this.ClassmateInfo.push(response.data[i]);
+          }
+        });
+
       });
     },
       data() {
         return {
-          nowxycid:1,
+          nowxyclass:"",
           nowxy:{},
           xyname:getCookie("xyusername"),
          ClassmateInfo: [],

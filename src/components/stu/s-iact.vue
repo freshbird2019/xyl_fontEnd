@@ -14,12 +14,15 @@
         </b>
         <span>
           <b>我参加的活动</b>
+          <div v-if="flag === 2" style="margin-right: 100%" class="el-icon-back" @click="back">
+          </div>
         </span>
       </el-col>
     </el-row>
 
-    <!-- 待审核活动信息汇总 -->
-    <el-table :data="iAcInfo" border>
+    <div v-if="flag === 1">
+    <!--参加活动信息汇总 -->
+    <el-table @row-click ="getActmate" :data="iAcInfo" border >
       <el-table-column prop="aid" label="活动编号" align="center"></el-table-column>
       <el-table-column prop="name" label="主题" align="center"></el-table-column>
       <el-table-column prop="num" label="人数" align="center"></el-table-column>
@@ -32,6 +35,48 @@
         </template>
       </el-table-column>
     </el-table>
+    </div>
+
+    <!-- 参加活动成员-->
+    <div v-else-if="flag === 2" class="form">
+      <el-table
+        :data="ActmateInfo"
+        style="width: 100%">
+        <el-table-column type="expand">
+          <template slot-scope="props">
+            <el-form label-position="left" inline class="demo-table-expand">
+              <el-form-item label="姓名" >
+                <span>{{ props.row.name }}</span>
+              </el-form-item>
+              <el-form-item label="性别">
+                <span>{{ props.row.sex }}</span>
+              </el-form-item>
+              <el-form-item label="电话">
+                <span>{{ props.row.phone }}</span>
+              </el-form-item>
+              <el-form-item label="邮箱">
+                <span>{{ props.row.mail }}</span>
+              </el-form-item>
+              <el-form-item label="地址">
+                <span>{{ props.row.address }}</span>
+              </el-form-item>
+            </el-form>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="姓名"
+          prop="name">
+        </el-table-column>
+        <el-table-column
+          label="性别"
+          prop="sex">
+        </el-table-column>
+        <el-table-column
+          label="联系方式"
+          prop="phone">
+        </el-table-column>
+      </el-table>
+    </div>
   </div>
 </template>
 
@@ -46,7 +91,7 @@
       removed(currentOrder) {
         console.log("退出该活动");
         this.$confirm(
-          "确定退出参加此活动？ " + currentOrder.orderId + ", 是否继续?",
+          "确定退出参加此活动？ " + currentOrder.aid + ", 是否继续?",
           "提示",
           {
             type: "warning"
@@ -68,6 +113,23 @@
           .catch(() => {
             this.$message.info("已取消操作!");
           });
+      },
+      getActmate(currentAc){
+        this.flag=2;
+        const routerParams = currentAc.aid;
+        let id = routerParams;
+        console.log(routerParams);
+        console.log("loading data.")
+        this.$ajax.get('http://localhost:8088/xyl/getAcXy?num='+id).then(response=> {
+          console.log(response.data);
+          for(let i= 0; i<response.data.length;i++) {
+            this.ActmateInfo.push(response.data[i]);
+          }
+        });
+      },
+      back(){
+        this.flag=1;
+        this.reload();
       },
       open1() {
         this.$message({
@@ -103,9 +165,10 @@
     },
     data() {
       return {
+        flag:1,
         xyname:getCookie("xyusername"),
         dialogCreateVisible: false,
-        dialogUpdateVisible: false,
+        ActmateInfo:[],
         iAcInfo: [],
       };
     }
@@ -134,5 +197,20 @@
     border-bottom: 2px #B68C8C solid;
     font-size: 24px;
     padding-bottom: 10px;
+  }
+  .backtitle{
+    font-size:20px;
+  }
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
   }
 </style>

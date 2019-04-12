@@ -58,6 +58,16 @@
         </router-link>
       </el-submenu>
 
+      <el-submenu index="5">
+        <template slot="title">
+          <i class="el-icon-edit"style="color:#ffffff"></i>
+          <span>个人信息</span>
+        </template>
+        <router-link to="/stu/s-selfpage">
+          <el-menu-item index="5-1">修改个人信息</el-menu-item>
+        </router-link>
+      </el-submenu>
+
     </el-menu>
   </div>
 </template>
