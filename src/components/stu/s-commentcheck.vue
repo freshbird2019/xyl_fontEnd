@@ -53,8 +53,12 @@
         label="状态"
         prop="state" width="70px">
       </el-table-column>
-      <el-table-column label="操作" width="80" align="center">
-      <el-button type="danger" size="small" icon="el-icon-delete" @click="removed(scope.row)">删除</el-button>
+      <el-table-column
+        label="操作"
+        prop="state" width="100px">
+        <template slot-scope="scope">
+          <el-button type="danger"  size="small" icon="el-icon-delete" @click="removeLy(scope.row)"style="background:#C19892;border:none">删除</el-button>
+        </template>
       </el-table-column>
     </el-table>
   </div>
@@ -77,6 +81,39 @@
         this.dialogUpdateVisible = true;
         console.log(this.dialogUpdateVisible);
       },
+      removeLy(currentLy) {
+        console.log("删除留言");
+        this.$confirm(
+          "此操作将永久删除留言 " + currentLy.lid + ", 是否继续?",
+          "提示",
+          {
+            type: "warning"
+          }
+        ).then(() => {
+          console.log("确认留言");
+          // 向请求服务端删除
+          let lid =currentLy.lid;
+          console.log(lid);
+          this.$ajax.get('http://127.0.0.1:8088/xyl/delete.do?lid='+lid).then(response => {
+            console.log(response);
+            if (response.data == true) {
+              this.open1();
+            }
+          }).catch(function (error) {
+            console.log("delete failed！")
+          });
+        })
+          .catch(() => {
+            this.$message.info("已取消操作!");
+          });
+      },
+      open1() {
+        this.$message({
+          message: '恭喜你，删除成功',
+          type: 'success'
+        });
+        this.reload();
+      },
     },
     mounted(){
       // 加载数据
@@ -95,37 +132,7 @@
     data() {
       return {
         xyname:getCookie("xyusername"),
-        update: {
-          orderId: "",
-          orderSource: "",
-          totalPrice: "",
-          remark: ""
-        },
-        tableData: [{
-          lid: '1',
-          name: '李泽言',
-          lydate:'2019.03.02 19:12:58',
-          state:'已审核',
-          info:'不能回头，就走的更远吧。'
-        }, {
-          lid: '2',
-          name: '白起',
-          lydate:'2019.03.02 19:12:58',
-          state:'已审核',
-          info:'只要你在风里，我就感知得到。'
-        }, {
-          lid: '3',
-          name: '周棋洛',
-          lydate:'2019.03.02 19:12:58',
-          state:'已审核',
-          info:'千万人的喜欢，不及你一个人的重要。'
-        }, {
-          lid: '4',
-          name: '许墨',
-          lydate:'2019.03.02 19:12:58',
-          state:'已审核',
-          info:'我贪得无厌想要你的全部。'
-        }]
+        tableData: []
       }
     }
   };
