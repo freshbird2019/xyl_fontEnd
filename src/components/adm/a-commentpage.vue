@@ -57,7 +57,7 @@
         </el-table-column>
         <el-table-column
           label="操作"
-          prop="state" width="100px">
+          prop="state" width="200px">
           <template slot-scope="scope">
             <el-button type="danger" size="small" icon="el-icon-delete" style="border:none"@click="removed(scope.row)">删除</el-button>
             <el-button type="primary" size="mini" icon="el-icon-setting" @click="asBest(scope.row)">精选</el-button>

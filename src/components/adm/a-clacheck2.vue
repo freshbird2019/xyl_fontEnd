@@ -27,7 +27,7 @@
       <el-table-column prop="sex" label="性别" align="center"></el-table-column>
       <el-table-column prop="phone" label="联系方式" align="center"></el-table-column>
       <el-table-column label="操作" width="220" align="center">
-        <template slot-scope="scope">
+        <template slot-scope="scope" >
           <el-button
             type="primary"
             size="mini"

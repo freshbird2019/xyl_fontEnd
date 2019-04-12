@@ -28,12 +28,12 @@
       <el-table-column prop="phone" label="联系方式" align="center"></el-table-column>
       <el-table-column label="操作" width="220" align="center">
         <template slot-scope="scope">
-          <el-button
-            type="primary"
-            size="mini"
-            icon="el-icon-setting"
-            @click="setCurrent(scope.row)"
-          >编辑</el-button>
+          <!--<el-button-->
+            <!--type="primary"-->
+            <!--size="mini"-->
+            <!--icon="el-icon-setting"-->
+            <!--@click="setCurrent(scope.row)"-->
+          <!--&gt;编辑</el-button>-->
           <el-button type="danger" size="small" icon="el-icon-delete" @click="removed(scope.row)">踢出班级</el-button>
         </template>
       </el-table-column>
@@ -84,14 +84,37 @@
       },
       updateOrder() {
         console.log("确定编辑班级成员信息");
-        this.dialogUpdateVisible = false;
+        this.$confirm(
+          "确认修改?",
+          "提示",
+          {
+            type: "warning"
+          }
+        ).then(() => {
+          console.log("确定编辑班级成员信息");
+          let data = this.update;
+          console.log(JSON.stringify(data));
+
+            this.$ajax({
+              method: 'post',
+              url: 'http://127.0.0.1:8088/xyl/updateNowin.do',
+              data: data,
+              contentType: "application/json charset=utf-8",
+            }).then((res) => {
+              console.log(res)
+              if (res.data === true) {
+                console.log(res.data)
+                this.open();
+              }
+            })
+        })
       },
       // 将同学从班级中踢出，状态变为0
       removed(currentOrder) {
         console.log("踢出班级");
         let id = currentOrder.xid;
         this.$confirm(
-          "此操作将将该同学提出班级 " + id + ", 是否继续?",
+          "此操作将该同学提出班级 " + id + ", 是否继续?",
           "提示",
           {
             type: "warning"
@@ -101,7 +124,7 @@
           // 向请求服务端删除
           let id = currentOrder.xid;
           let state = 0;
-          console.log(orderId);
+          console.log(id);
           this.$ajax.get('http://localhost:8088/xyl/apply.do?xid='+id+'&state='+state,).then(response=> {
             console.log(response);
             if(response.data){

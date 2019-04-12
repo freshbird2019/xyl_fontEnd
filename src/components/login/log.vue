@@ -1,12 +1,12 @@
 <template>
   <div class="a" >
-    <div class="pics" >
-    <el-carousel height="400px":interval="5000" arrow="always" >
-      <el-carousel-item v-for="item in ImgUrl" :key="item">
-        <img v-bind:src=item height="400px" align="center"/>
-      </el-carousel-item>
-    </el-carousel>
-    </div>
+    <!--<div class="pics" >-->
+    <!--<el-carousel height="400px":interval="5000" arrow="always" >-->
+      <!--<el-carousel-item v-for="item in ImgUrl" :key="item">-->
+        <!--<img v-bind:src=item height="400px" align="center"/>-->
+      <!--</el-carousel-item>-->
+    <!--</el-carousel>-->
+    <!--</div>-->
     <h2 align="center" >在线校友录管理系统</h2>
     <div class="b" align="center" >
     <el-tabs type="border-card" style="width:40%;":stretch="true" >

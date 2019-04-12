@@ -52,8 +52,8 @@
         </el-table-column>
         <el-table-column
           label="操作"
-          prop="state" width="100px">
-          <template slot-scope="scope">
+          prop="state" width="200px">
+          <template slot-scope="scope" style="width: 200px">
             <el-button type="info"  size="small" icon="el-icon-check" @click="passLy(scope.row)"style="background:#C19892;border:none">通过</el-button>
             <el-button type="info"  size="small" icon="el-icon-check" @click="removeLy(scope.row)"style="background:#C19892;border:none">删除</el-button>
           </template>
