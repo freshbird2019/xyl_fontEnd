@@ -4,6 +4,7 @@
       <el-breadcrumb-item >首页</el-breadcrumb-item>
       <el-breadcrumb-item>活动浏览</el-breadcrumb-item>
       <el-breadcrumb-item><b>我参加的活动</b></el-breadcrumb-item>
+      <el-breadcrumb-item v-if="flag === 2"><b>活动参与者</b></el-breadcrumb-item>
     </el-breadcrumb>
 
     <el-row :gutter="20" class="orderTitle">
@@ -16,6 +17,7 @@
           <b>我参加的活动</b>
           <div v-if="flag === 2" style="margin-right: 100%" class="el-icon-back" @click="back">
           </div>
+
         </span>
       </el-col>
     </el-row>

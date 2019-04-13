@@ -23,7 +23,8 @@ import sactpage from '@/components/stu/s-actpage'
 import siact from '@/components/stu/s-iact'
 import scommentcheck from '@/components/stu/s-commentcheck'
 import sselfpage from '@/components/stu/s-selfpage'
-
+import sfindnotice from '@/components/stu/s-findnotice'
+import saddnewfind from '@/components/stu/s-addnewfind'
 
 import log from '@/components/login/log'
 import register from '@/components/login/register'
@@ -138,6 +139,16 @@ export default new Router({
               name: 'sselfpage',
               component: sselfpage
             },
+            {
+              path:'/stu/s-findnotice',
+              name:'sfindnotice',
+              component:sfindnotice
+            },
+            {
+              path:'/stu/s-addnewfind',
+              name:'saddnewfind',
+              component:saddnewfind
+            }
           ]
         }
         // 3、声明路由路径，路由名称，路由所用组件，

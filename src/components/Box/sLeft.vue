@@ -61,10 +61,13 @@
       <el-submenu index="5">
         <template slot="title">
           <i class="el-icon-edit"style="color:#ffffff"></i>
-          <span>个人信息</span>
+          <span>寻人启事</span>
         </template>
-        <router-link to="/stu/s-selfpage">
-          <el-menu-item index="5-1">修改个人信息</el-menu-item>
+        <router-link to="/stu/s-findnotice">
+          <el-menu-item index="5-1">寻人启事</el-menu-item>
+        </router-link>
+        <router-link to="/stu/s-addnewfind">
+          <el-menu-item index="5-1">找人</el-menu-item>
         </router-link>
       </el-submenu>
 

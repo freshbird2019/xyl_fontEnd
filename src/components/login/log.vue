@@ -228,6 +228,7 @@
     border: 1px solid #333333;
     border-radius: 5px;
     box-shadow: 2px 2px 3px #333333;
+    cursor: pointer;
   }
   .col-md-8 {
     width: 66.66666667%;
