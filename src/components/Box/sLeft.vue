@@ -71,6 +71,16 @@
         </router-link>
       </el-submenu>
 
+      <el-submenu index="6">
+        <template slot="title">
+          <i class="el-icon-edit"style="color:#ffffff"></i>
+          <span>时间线</span>
+        </template>
+        <router-link to="/stu/s-timeline">
+          <el-menu-item index="6-1">时间线</el-menu-item>
+        </router-link>
+      </el-submenu>
+
     </el-menu>
   </div>
 </template>

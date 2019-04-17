@@ -84,6 +84,7 @@
 
       loginXy() { // 校友登陆
         if(this.xyusername == "" || this.xypassword == ""){
+          this.$router.push('/stu/s-timeline')
           alert("请输入用户名或密码")
         }else{
           let data = {'name':this.xyusername,'pw':this.xypassword}

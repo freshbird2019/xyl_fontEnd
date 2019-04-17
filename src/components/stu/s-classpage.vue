@@ -18,26 +18,28 @@
       </el-col>
     </el-row>
     <!-- 班级汇总 -->
+    <el-input v-model="search" placeholder="请输入你要查找的班级" prefix-icon="el-icon-search"
+    ></el-input>
       <el-table
-        :data="tableData"
+        :data="tables"
         style="width: 100%">
         <el-table-column type="expand">
           <template slot-scope="props">
             <el-form label-position="left" inline class="demo-table-expand">
               <el-form-item label="班级名称">
-                <span>{{ props.row.name }}</span>
+                <span>{{props.row.name}}</span>
               </el-form-item>
               <el-form-item label="班级人数">
-                <span>{{ props.row.number }}</span>
+                <span >{{props.row.number}}</span>
               </el-form-item>
               <el-form-item label="年份">
-                <span>{{ props.row.year }}</span>
+                <span>{{props.row.year}}</span>
               </el-form-item>
               <el-form-item label="专业">
-                <span>{{ props.row.major }}</span>
+                <span>{{props.row.major}}</span>
               </el-form-item>
               <el-form-item label="学院">
-                <span>{{ props.row.college }}</span>
+                <span>{{props.row.college}}</span>
               </el-form-item>
             </el-form>
           </template>
@@ -116,10 +118,26 @@
     },
     data() {
       return {
+        search:'',
         xyname:getCookie("xyusername"),
         tableData: []
         }
+      },
+    computed: {
+      tables () {
+        const search = this.search
+        if (search) {
+          console.log('this.tableData', this.tableData)
+          return this.tableData.filter(dataNews => {
+            return Object.keys(dataNews).some(key => {
+              return String(dataNews[key]).toLowerCase().indexOf(search) > -1
+            })
+          })
+        }
+        console.log('this.tableData', this.tableData)
+        return this.tableData
       }
+    }
     };
 </script>
 

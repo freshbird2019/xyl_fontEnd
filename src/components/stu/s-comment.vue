@@ -51,6 +51,7 @@
           </template>
         </el-table-column>
       </el-table>
+
       <div class="board">
         <el-row :gutter="20" class="orderTitle" style="margin-top:3%;">
           <el-col :span="2.5">
@@ -101,6 +102,14 @@
         this.$http.post('http://127.0.0.1:8088/xyl/addLy.do',data
         ).then(response => {
           console.log(response);
+
+          /*加时间线*/
+          var des=encodeURI("发表评论:  ")+comment;
+          let timedate={'xyname':this.lyxyname,'type':2,'description':des}
+          this.$http.post('http://127.0.0.1:8088/xyl/addTimeline',timedate).then(response => {
+            console.log(response);
+          });
+
           this.open1();
         }).catch(function (error) {
           console.log("save failed！")

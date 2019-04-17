@@ -25,6 +25,8 @@ import scommentcheck from '@/components/stu/s-commentcheck'
 import sselfpage from '@/components/stu/s-selfpage'
 import sfindnotice from '@/components/stu/s-findnotice'
 import saddnewfind from '@/components/stu/s-addnewfind'
+import test from '@/components/stu/test'
+import stimeline from '@/components/stu/s-timeline'
 
 import log from '@/components/login/log'
 import register from '@/components/login/register'
@@ -148,6 +150,16 @@ export default new Router({
               path:'/stu/s-addnewfind',
               name:'saddnewfind',
               component:saddnewfind
+            },
+            {
+              path:'/stu/test',
+              name:'test',
+              component:test
+            },
+            {
+              path:'/stu/s-timeline',
+              name:'stimeline',
+              component:stimeline
             }
           ]
         }

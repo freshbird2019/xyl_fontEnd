@@ -1,57 +1,111 @@
 <template>
-  <div align="center" >
-    <div class="col-md">
-      <div class="demo-input-suffix">
-      找谁：
-      <el-input
-        placeholder="请输入内容"
-        prefix-icon="el-icon-search"
-        v-model="ftitle">
-      </el-input>
-      </div>
-      谁可见：
-      <el-radio v-model="radio" label="1">全部成员</el-radio>
-      <el-radio v-model="radio" label="2">班级成员</el-radio>
-      描述：
+  <div class="mainBox">
+    <el-breadcrumb separator-class="el-icon-arrow-right" style="margin-bottom:25px">
+      <el-breadcrumb-item >首页</el-breadcrumb-item>
+      <el-breadcrumb-item>寻人启事</el-breadcrumb-item>
+      <el-breadcrumb-item><b>发布寻人启事</b></el-breadcrumb-item>
+    </el-breadcrumb>
+    <div class="form">
 
-    <el-input
-      type="textarea"
-      :rows="4"
-      size="medium"
-      placeholder="请输入内容"
-      v-model="description">
-    </el-input>
+
+        <div class="input-control" style="margin-top:80px">
+
+          找谁: <input type="text" name="username" v-model="ftitle" />
+
+        </div>
+
+
+      <div class="input-control" style="margin-top:50px">
+
+        谁可见：<el-radio v-model="radio" label="0">全部成员</el-radio>
+      <el-radio v-model="radio" label="1">班级成员</el-radio>
+      </div>
+
+      <div class="input-control" style="margin-top:20px">
+        描述：
+        <el-input
+          type="textarea"
+          name="abc"
+          placeholder="请输入内容"
+          v-model="description"
+          rows="15">
+        </el-input>
+      </div>
     </div>
+        <el-col :span="1"  style="margin-left:73%;margin-top:30%;">
+          <el-button type="info" @click="ToAdd" style="background:#C19892;border:none">发表</el-button>
+        </el-col>
+
     </div>
+
+
 </template>
 
 <script>
+    import {getCookie} from "../../assets/js/cookie";
+
     export default {
         name: "addnewfind",
+      inject:['reload'],
+      mounted(){
+        let name=this.xyname;
+        console.log(name);
+        this.$http.post('http://localhost:8088/xyl/getXyByname?xyname='+name).then(res=> {
+          console.log(res.data);
+          this.nowxy=res.data;
+        });
+      },
       methods: {
-        ToAdd(){
-          let data = {'lyxyname':this.xyname}
-          console.log(data);
-          this.$http.post('http://127.0.0.1:8088/xyl/addLy.do',data
-          ).then(response => {
-            console.log(response);
-            this.open1();
-          }).catch(function (error) {
-            console.log("save failed！")
-          });
+        ToAdd() {
+         if (this.ftitle === '') {
+            alert("标题不可为空！")
+          }
+          else if (this.description === '') {
+            alert("内容不可为空！")
+          }
+          else {
+            var desc = encodeURI(this.description)
+            var title = encodeURI(this.ftitle)
+            if (radio != 0) {
+              state = this.nowxy.clazzByClassid.Cid;
+            }
+            let data = {
+              'xyname': this.xyname, 'state': this.radio,
+              'title': title, 'description': desc
+            }
+            console.log(data);
+            this.$http.post('http://127.0.0.1:8088/xyl/addFindNotice', data
+            ).then(response => {
+              console.log(response);
+              if (response.data === true) {
+                this.open1();
+              }
+              else this.open2();
+            })
+          }
         },
         open1(){
           this.$message({
-            message:'留言成功，等待审核',
+            message:'发表成功',
             type:'success'
+          });
+          this.reload();
+        },
+        open2(){
+          this.$message({
+            message:'发表失败',
+            type:'failed'
           });
           this.reload();
         }
       },
       data () {
         return {
+          nowxy:{},
           xyname:getCookie("xyusername"),
-          radio: '1',
+          radio: "1",
+          ftitle:"",
+          description:"",
       };
       }
 
@@ -59,8 +113,80 @@
 </script>
 
 <style scoped>
-  .col-md {
-    margin-right: auto;
-    width: 66.66666667%;
+  .input-control{
+
+    margin: 10px auto;
+
+    width: 60%;
+
+    height: 50px;
+
+  }
+
+
+
+  .input-control input{
+
+    width: 98%;
+
+    padding: 1%;
+
+    outline:none;
+
+    border:2px #f4f4f4 solid;
+
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+
+    -moz-osx-font-smoothing: grayscale;
+
+    color: #2c3e50;
+
+    height: 30px;
+
+    border-radius: 5px;
+
+    background-color: transparent;
+
+  }
+
+  .input-control el-input{
+
+    width: 98%;
+
+    padding: 1%;
+
+    outline:none;
+
+    border:2px #f4f4f4 solid;
+
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+
+    -webkit-font-smoothing: antialiased;
+
+    -moz-osx-font-smoothing: grayscale;
+
+    color: #2c3e50;
+
+    height: 30px;
+
+    border-radius: 5px;
+
+    background-color: transparent;
+
+  }
+
+
+
+  input:-webkit-autofill{
+
+     -webkit-box-shadow : 0 0 0px 1000px white inset ;
+
+   }
+  el-input:-webkit-autofill{
+
+    -webkit-box-shadow : 0 0 0px 1000px white inset ;
+
   }
 </style>

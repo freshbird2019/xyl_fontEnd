@@ -56,6 +56,14 @@
               this.showTishi = true
               this.newUsername = ''
               this.newPassword = ''
+
+              /*加时间线*/
+              var des=encodeURI("注册成为校友录用户");
+              let timedate={'xyname':this.newUsername,'type':1,'description':des}
+              this.$http.post('http://127.0.0.1:8088/xyl/addTimeline',timedate).then(response => {
+                console.log(response);
+              });
+
               /*注册成功之后再跳回登录页*/
               setTimeout(function () {
                 this.$router.push('/')
